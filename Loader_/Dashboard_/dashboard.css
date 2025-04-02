@@ -1,0 +1,342 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    display: flex;
+    height: 160vh;
+    background: linear-gradient(to right, #141e30, #243b55);
+    color: #fff;
+    overflow-x: hidden;
+}
+
+/* Sidebar - Profile Section */
+.profile-section {
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.3);
+    border-right: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Profile Picture */
+.profile-section img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 4px solid #ffffff;
+    object-fit: cover;
+    margin-bottom: 15px;
+}
+
+/* Username */
+.profile-section h2 {
+    font-size: 20px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+/* Hide default file input */
+.profile-section input {
+    display: none;
+}
+
+/* Buttons Container */
+.button-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* Upload & Choose Image Buttons */
+.upload-btn,
+#upload-image {
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Choose Image Button */
+.upload-btn {
+    background: #4caf50;
+    color: white;
+    transition: 0.3s;
+}
+
+.upload-btn:hover {
+    background: #388e3c;
+}
+
+/* Upload Button */
+#upload-image {
+    background: #ff9800;
+    color: white;
+    transition: 0.3s;
+}
+
+#upload-image:hover {
+    background: #e68900;
+}
+
+
+/* Main Dashboard */
+.dashboard-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+/* User Info */
+.user-info {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    margin-top: 30px;
+}
+
+.user-info h3 {
+    font-size: 18px;
+}
+
+.user-info input {
+    width: 90%;
+    padding: 8px;
+    margin-top: 8px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    padding-left: 10px;
+}
+
+.user-info button {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 10px;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+.user-info button:hover {
+    background: #0056b3;
+}
+
+/* Achievements & Badges */
+.stats-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+    margin-top: 5px;
+}
+
+.stats-box {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.stats-box h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.stats-box ul {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 10px;
+}
+
+.stats-box ul li {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 8px;
+    text-align: center;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+/* Progress Section */
+.progress-section {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    margin-top: 5px;
+}
+
+.progress-section h3 {
+    font-size: 18px;
+}
+
+/* Challenge Button */
+/* Challenge Section */
+.challenges {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    margin-top: 10px !important;
+    text-align: center;
+    width: 100%;
+    margin: auto;
+}
+
+/* Challenge Title */
+.challenges h3 {
+    font-size: 22px;
+    margin-bottom: 15px;
+    color: white;
+    font-weight: 700;
+}
+
+/* Challenge Buttons */
+.challenges a {
+    text-decoration: none;
+}
+
+.challenges button {
+    background: linear-gradient(120deg, #7873f5, #5851db);
+    color: white;
+    border: none;
+    padding: 12px 16px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 5px;
+    transition: transform 0.2s ease, background 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+    margin: 10px;
+    margin-right: 20px;
+    display: inline-block;
+    width: 160px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Gradient Shine Effect */
+.challenges button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(120deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0));
+    transform: skewX(-30deg);
+    transition: all 0.6s ease-in-out;
+}
+
+/* Hover Effects */
+.challenges button:hover::before {
+    left: 100%;
+}
+
+.challenges button:hover {
+    background: linear-gradient(120deg, #5851db, #7873f5);
+    transform: scale(1.08);
+    box-shadow: 0 8px 16px rgba(120, 115, 245, 0.5);
+}
+
+/* Active (Click) Effect */
+.challenges button:active {
+    transform: scale(0.98);
+    box-shadow: 0 4px 8px rgba(120, 115, 245, 0.4);
+}
+
+
+
+/* Logout Button */
+#logout {
+    background: linear-gradient(135deg, #dc3545, #b21f2d);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+    border-radius: 8px;
+    transition: transform 0.2s ease, background 0.3s ease;
+    width: 10%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    margin-top: 50px !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px auto;
+    margin-bottom: 50px !important;
+}
+
+
+#logout:hover {
+    background: linear-gradient(135deg, #b21f2d, #7a1c22);
+    transform: scale(1.05);
+}
+
+
+/* Responsive Design */
+/* Responsive Design */
+@media (max-width: 768px) {
+    .profile-section {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .profile-section img {
+        width: 100px;
+        height: 100px;
+    }
+
+    .button-container {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .dashboard-container {
+        padding: 10px;
+    }
+
+    .stats-container {
+        grid-template-columns: 1fr;
+    }
+
+    .progress-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+
+
+    .challenges button {
+        width: 75%;
+        max-width: none;
+    }
+
+    #logout {
+        width: 40%;
+        margin-bottom: 400px !important;
+    }
+}

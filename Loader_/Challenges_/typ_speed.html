@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Byte-Blitz</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            background-color: #121212;
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Container */
+        .container {
+            max-width: 650px;
+            width: 90%;
+            margin: 50px auto;
+            padding: 25px;
+            background: #1e1e1e;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease-in-out;
+            overflow: hidden;
+        }
+
+        .container:hover {
+            transform: scale(1.02);
+        }
+
+        /* Title */
+        h2 {
+            font-size: 2rem;
+            color: #ffcc00;
+            /* text-shadow: 2px 2px 5px rgba(255, 204, 0, 0.5); */
+        }
+
+        /* Select Dropdown */
+        select {
+            padding: 10px;
+            margin: 10px;
+            border: none;
+            border-radius: 6px;
+            background: #2b2b2b;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            outline: none;
+            transition: background 0.3s ease-in-out;
+        }
+
+        select:hover {
+            background: #3b3b3b;
+        }
+
+        /* Start Button */
+        button {
+            padding: 12px 20px;
+            margin: 10px;
+            background: #ffcc00;
+            color: black;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+        }
+
+        button:hover {
+            background: #e6b800;
+            transform: scale(1.05);
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        /* Code Snippet (Prevents Overflow) */
+        .code-snippet {
+            background: black;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            text-align: left;
+            color: #00ffcc;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            max-width: 100%;
+            border-left: 4px solid #ffcc00;
+            margin-top: 20px;
+            box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+
+        /* Typing Input */
+        textarea {
+            width: 96%;
+            max-width: 100%;
+            height: 120px;
+            margin-top: 15px;
+            padding: 10px;
+            background: #2b2b2b;
+            color: white;
+            border: 2px solid #ffcc00;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: 'Courier New', monospace;
+            outline: none;
+            resize: none;
+            transition: border 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        textarea:focus {
+            border: 2px solid #ff9900;
+            box-shadow: 0 0 10px rgba(255, 153, 0, 0.5);
+        }
+
+        /* Stats Section */
+        .stats {
+            margin-top: 20px;
+            padding: 15px;
+            background: #2b2b2b;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+        }
+
+        .stats p {
+            font-size: 18px;
+            margin: 5px 0;
+        }
+
+        /* Final Results */
+        .final-results {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: #ffcc00;
+            color: black;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+            overflow-wrap: break-word;
+        }
+
+        .final-results h3 {
+            font-size: 22px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 20px;
+            }
+
+            h2 {
+                font-size: 22px;
+            }
+
+            select,
+            button {
+                font-size: 14px;
+                padding: 8px;
+            }
+
+            .code-snippet {
+                font-size: 14px;
+            }
+
+            textarea {
+                height: 100px;
+                font-size: 14px;
+            }
+
+            .stats p {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Byte-Blitz</h2>
+        <p>Select difficulty and programming language, then type the code as fast and accurately as you can!</p>
+        <select id="difficulty">
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+        </select>
+        <select id="language">
+            <option value="python">Python</option>
+            <option value="cpp">C++</option>
+            <option value="c">C</option>
+            <option value="java">Java</option>
+            <option value="js">JavaScript</option>
+        </select>
+        <button onclick="startChallenge()">Start</button>
+        <div class="code-snippet" id="code-snippet"></div>
+        <textarea id="user-input" placeholder="Start typing here..." disabled></textarea>
+        <div class="stats">
+            <p>Time: <span id="time">60</span> sec</p>
+            <p>WPM: <span id="wpm">0</span></p>
+            <p>Accuracy: <span id="accuracy">100</span>%</p>
+            <p>Snippet: <span id="snippet-count">1/10</span></p>
+        </div>
+        <div class="final-results" id="final-results">
+            <h3>Final Results</h3>
+            <p>Average WPM: <span id="avg-wpm">0</span></p>
+            <p>Average Accuracy: <span id="avg-accuracy">0</span>%</p>
+            <p>Total Time: <span id="total-time">0</span> sec</p>
+        </div>
+    </div>
+
+    <div>
+        <button id="play-again">Play Again</button>
+        <div>
+
+            <script>
+                let snippets = [];
+                let timer, timeLeft = 60, startTime, timerStarted = false;
+                let currentSnippetIndex = 0;
+                let totalWPM = 0, totalAccuracy = 0, totalTime = 0;
+                let difficulty = "easy";
+                let language = "python";
+
+                const snippetsByLanguageAndDifficulty = {
+                    python: {
+                        easy: [
+                            'print("Hello, World!")',
+                            'x = 5',
+                            'name = "John"',
+                            'if True: print("True")',
+                            'sum = 1 + 2',
+                            'arr = [1, 2, 3]',
+                            'obj = {"key": "value"}',
+                            'def greet(): return "Hello"',
+                            'is_true = True',
+                            'num = random.random()',
+                            'for i in range(5): print(i)',
+                            'while x < 10: x += 1',
+                            'def square(n): return n * n',
+                            'list_of_numbers = [1, 2, 3, 4, 5]',
+                            'max_value = max(list_of_numbers)',
+                            'min_value = min(list_of_numbers)',
+                            'length = len(list_of_numbers)',
+                            'first_item = list_of_numbers[0]',
+                            'last_item = list_of_numbers[-1]',
+                            'list_of_numbers.append(6)',
+                            'list_of_numbers.remove(3)',
+                            'is_empty = len(list_of_numbers) == 0',
+                            'list_of_numbers.sort()',
+                            'list_of_numbers.reverse()',
+                            'tuple_example = (1, 2, 3)',
+                            'set_example = {1, 2, 3}',
+                            'dict_example = {"a": 1, "b": 2}'
+                        ],
+
+                        medium: [
+                            'for i in range(10): print(i)',
+                            'def add(a, b): return a + b',
+                            'arr = [x * 2 for x in [1, 2, 3]]',
+                            'obj = {"key": "value"}; print(obj["key"])',
+                            'x = random.random() * 100',
+                            'str = "Hello".upper()',
+                            'sum = sum([1, 2, 3])',
+                            'is_even = lambda num: num % 2 == 0',
+                            'filtered = [x for x in [1, 2, 3] if x > 1]',
+                            'doubled = list(map(lambda x: x * 2, [1, 2, 3]))',
+                            'def factorial(n): return 1 if n == 0 else n * factorial(n - 1)',
+                            'def fibonacci(n): return n if n <= 1 else fibonacci(n - 1) + fibonacci(n - 2)',
+                            'try: x = 1 / 0 except ZeroDivisionError: print("Error")',
+                            'with open("file.txt", "r") as f: content = f.read()',
+                            'import math; area = math.pi * (radius ** 2)',
+                            'def filter_even(numbers): return [n for n in numbers if n % 2 == 0]',
+                            'def merge_dicts(dict1, dict2): return {**dict1, **dict2}',
+                            'def count_vowels(s): return sum(1 for char in s if char in "aeiou")',
+                            'def is_palindrome(s): return s == s[::-1]',
+                            'def flatten(lst): return [item for sublist in lst for item in sublist]',
+                            'def debounce(func, wait): ...',
+                            'def throttle(func, limit): ...',
+                            'def map_example(): return list(map(lambda x: x * 2, [1, 2, 3]))',
+                            'def zip_example(): return list(zip([1, 2, 3], ["a", "b", "c"]))',
+                            'def enumerate_example(): return list(enumerate(["a", "b", "c"]))'
+                        ],
+
+                        hard: [
+                            'fibonacci = lambda n: n if n <= 1 else fibonacci(n - 1) + fibonacci(n - 2)',
+                            'factorial = lambda n: 1 if n == 0 else n * factorial(n - 1)',
+                            'sorted = sorted([3, 1, 4, 1, 5])',
+                            'unique = list(set([1, 2, 2, 3]))',
+                            'reversed = lambda s: s[::-1]',
+                            'is_prime = lambda num: all(num % i != 0 for i in range(2, num)) and num > 1',
+                            'flatten = lambda lst: [item for sublist in lst for item in sublist]',
+                            'memoize = lambda fn: { "cache": {}, "func": lambda *args: (lambda key: cache[key] if key in cache else (cache.update({key: fn(*args)}), cache[key])[1])(str(args)) }["func"]',
+                            'debounce = lambda fn, delay: (lambda: { "timeout": None, "func": lambda *args: (clearTimeout(timeout), setattr(this, "timeout", setTimeout(lambda: fn(*args), delay))) }["func"])()',
+                            'throttle = lambda fn, limit: (lambda: { "in_throttle": False, "func": lambda *args: (not in_throttle and (fn(*args), setattr(this, "in_throttle", True), setTimeout(lambda: setattr(this, "in_throttle", False), limit)) }["func"])()',
+                            'def quicksort(arr): if len(arr) <= 1: return arr; pivot = arr[len(arr) // 2]; left = [x for x in arr if x < pivot]; middle = [x for x in arr if x == pivot]; right = [x for x in arr if x > pivot]; return quicksort(left) + middle + quicksort(right)',
+                            'def merge_sort(arr): if len(arr) <= 1: return arr; mid = len(arr) // 2; left = merge_sort(arr[:mid]); right = merge_sort(arr[mid:]); return merge(left, right); def merge(left, right): result = []; while left and right: if left[0] < right[0]: result.append(left.pop(0)); else: result.append(right.pop(0)); return result + left + right',
+                            'def binary_search(arr, target): low, high = 0, len(arr) - 1; while low <= high: mid = (low + high) // 2; if arr[mid] < target: low = mid + 1; elif arr[mid] > target: high = mid - 1; else: return mid; return -1',
+                            'def permutations(lst): if len(lst) == 0: return [[]]; return [[x] + p for x in lst for p in permutations([y for y in lst if y != x])]',
+                            'def combinations(lst, n): if n == 0: return [[]]; if len(lst) == 0: return []; return combinations(lst[1:], n - 1) + [[lst[0]] + c for c in combinations(lst[1:], n)]',
+                            'def count_occurrences(lst): return {x: lst.count(x) for x in set(lst)}',
+                            'def transpose(matrix): return [list(row) for row in zip(*matrix)]',
+                            'def sieve_of_eratosthenes(n): primes = []; is_prime = [True] * (n + 1); for p in range(2, int(n**0.5) + 1): if is_prime[p]: for i in range(p * p, n + 1, p): is_prime[i] = False; primes = [p for p in range(2, n + 1) if is_prime[p]]; return primes'
+                        ]
+                    },
+
+
+                    cpp: {
+                        easy: [
+                            '#include <iostream>\nint main() { std::cout << "Hello, World!"; }',
+                            'int x = 5;',
+                            'std::string name = "John";',
+                            'if (true) { std::cout << "True"; }',
+                            'int sum = 1 + 2;',
+                            'int arr[] = {1, 2, 3};',
+                            'struct Obj { std::string key; }; Obj obj = {"value"};',
+                            'std::string greet() { return "Hello"; }',
+                            'bool isTrue = true;',
+                            'double num = rand();',
+                            'for (int i = 0; i < 5; i++) { std::cout << i; }',
+                            'while (x < 10) { x++; }',
+                            'int square(int n) { return n * n; }',
+                            'std::vector<int> list_of_numbers = {1, 2, 3, 4, 5};',
+                            'int max_value = *std::max_element(list_of_numbers.begin(), list_of_numbers.end());',
+                            'int min_value = *std::min_element(list_of_numbers.begin(), list_of_numbers.end());',
+                            'int length = list_of_numbers.size();',
+                            'int first_item = list_of_numbers[0];',
+                            'int last_item = list_of_numbers.back();',
+                            'list_of_numbers.push_back(6);',
+                            'list_of_numbers.erase(std::remove(list_of_numbers.begin(), list_of_numbers.end(), 3), list_of_numbers.end());',
+                            'bool is_empty = list_of_numbers.empty();',
+                            'std::sort(list_of numbers.begin(), list_of_numbers.end());',
+                            'std::reverse(list_of_numbers.begin(), list_of_numbers.end());',
+                            'std::tuple<int, int, int> tuple_example = std::make_tuple(1, 2, 3);',
+                            'std::set<int> set_example = {1, 2, 3};',
+                            'std::map<std::string, int> dict_example = {{"a", 1}, {"b", 2}};'
+                        ],
+
+                        medium: [
+                            'for (int i = 0; i < 10; i++) { std::cout << i; }',
+                            'int add(int a, int b) { return a + b; }',
+                            'std::vector<int> arr = {1, 2, 3}; for (auto& x : arr) x *= 2;',
+                            'struct Obj { std::string key; }; Obj obj = {"value"}; std::cout << obj.key;',
+                            'double x = rand() % 100;',
+                            'std::string str = "Hello"; std::transform(str.begin(), str.end(), str.begin(), ::toupper);',
+                            'std::vector<int> arr = {1, 2, 3}; int sum = std::accumulate(arr.begin(), arr.end(), 0);',
+                            'auto isEven = [](int num) { return num % 2 == 0; };',
+                            'std::vector<int> arr = {1, 2, 3}; arr.erase(std::remove_if(arr.begin(), arr.end(), [](int x) { return x <= 1; }), arr.end());',
+                            'std::vector<int> arr = {1, 2, 3}; std::transform(arr.begin(), arr.end(), arr.begin(), [](int x) { return x * 2; });',
+                            'int factorial(int n) { return n == 0 ? 1 : n * factorial(n - 1); }',
+                            'int fibonacci(int n) { return n <= 1 ? n : fibonacci(n - 1) + fibonacci(n - 2); }',
+                            'try { int x = 1 / 0; } catch (const std::exception& e) { std::cout << "Error"; }',
+                            'std::ifstream file("file.txt"); std::string content; if (file) { std::getline(file, content); }',
+                            '#include <cmath>; double area = M_PI * (radius * radius);',
+                            'std::vector<int> filter_even(const std::vector<int>& numbers) { std::vector<int> result; for (int n : numbers) if (n % 2 == 0) result.push_back(n); return result; }',
+                            'std::map<std::string, int> merge_dicts(const std::map<std::string, int>& dict1, const std::map<std::string, int>& dict2) { auto merged = dict1; for (const auto& [key, value] : dict2) merged[key] = value; return merged; }',
+                            'int count_vowels(const std::string& s) { return std::count_if(s.begin(), s.end(), [](char c) { return std::string("aeiou").find(c) != std::string::npos; }); }',
+                            'bool is_palindrome(const std::string& s) { return std::equal(s.begin(), s.begin() + s.size()/2, s.rbegin()); }',
+                            'std::vector<int> flatten(const std::vector<std::vector<int>>& lst) { std::vector<int> result; for (const auto& sub : lst) result.insert(result.end(), sub.begin(), sub.end()); return result; }',
+                            'void debounce(std::function<void()> func, int wait) { /* Placeholder for debounce function */ }',
+                            'void throttle(std::function<void()> func, int limit) { /* Placeholder for throttle function */ }',
+                            'std::vector<int> map_example() { return std::vector<int>(arr.size()); }',
+                            'std::vector<std::pair<int, std::string>> zip_example() { return {}; }',
+                            'std::vector<std::pair<int, char>> enumerate_example() { return {}; }'
+                        ],
+
+                        hard: [
+                            'int fibonacci(int n) { return n <= 1 ? n : fibonacci(n - 1) + fibonacci(n - 2); }',
+                            'int factorial(int n) { return n == 0 ? 1 : n * factorial(n - 1); }',
+                            'std::vector<int> arr = {3, 1, 4, 1, 5}; std::sort(arr.begin(), arr.end());',
+                            'std::vector<int> arr = {1, 2, 2, 3}; std::sort (arr.begin(), arr.end()); arr.erase(std::unique(arr.begin(), arr.end()), arr.end());',
+                            'std::string reversed(std::string str) { std::reverse(str.begin(), str.end()); return str; }',
+                            'bool isPrime(int num) { for (int i = 2; i < num; i++) if (num % i == 0) return false; return num > 1; }',
+                            'std::vector<int> flatten(std::vector<std::vector<int>> arr) { std::vector<int> result; for (auto& sub : arr) result.insert(result.end(), sub.begin(), sub.end()); return result; }',
+                            'template <typename Func> auto memoize(Func fn) { std::map<std::string, decltype(fn(0))> cache; return [=](auto... args) mutable { std::string key = (args + ...); return cache.find(key) != cache.end() ? cache[key] : (cache[key] = fn(args...)); }; }',
+                            'template <typename Func> auto debounce(Func fn, int delay) { std::function<void()> timeout; return [=](auto... args) mutable { clearTimeout(timeout); timeout = setTimeout([=]() { fn(args...); }, delay); }; }',
+                            'template <typename Func> auto throttle(Func fn, int limit) { bool inThrottle = false; return [=](auto... args) mutable { if (!inThrottle) { fn(args...); inThrottle = true; setTimeout([=]() { inThrottle = false; }, limit); } }; }',
+                            'void quicksort(std::vector<int>& arr) { if (arr.size() <= 1) return; int pivot = arr[arr.size() / 2]; std::vector<int> left, right; for (int x : arr) { if (x < pivot) left.push_back(x); else if (x > pivot) right.push_back(x); } quicksort(left); quicksort(right); arr.clear(); arr.insert(arr.end(), left.begin(), left.end()); arr.push_back(pivot); arr.insert(arr.end(), right.begin(), right.end()); }',
+                            'std::vector<int> merge_sort(std::vector<int>& arr) { if (arr.size() <= 1) return arr; int mid = arr.size() / 2; std::vector<int> left = merge_sort(std::vector<int>(arr.begin(), arr.begin() + mid)); std::vector<int> right = merge_sort(std::vector<int>(arr.begin() + mid, arr.end())); return merge(left, right); }',
+                            'int binary_search(const std::vector<int>& arr, int target) { int low = 0, high = arr.size() - 1; while (low <= high) { int mid = (low + high) / 2; if (arr[mid] < target) low = mid + 1; else if (arr[mid] > target) high = mid - 1; else return mid; } return -1; }',
+                            'std::vector<std::vector<int>> permutations(std::vector<int> lst) { if (lst.empty()) return {{} }; std::vector<std::vector<int>> result; for (size_t i = 0; i < lst.size(); ++i) { int x = lst[i]; lst.erase(lst.begin() + i); auto perms = permutations(lst); for (auto& p : perms) { p.insert(p.begin(), x); result.push_back(p); } lst.insert(lst.begin() + i, x); } return result; }',
+                            'std::vector<std::vector<int>> combinations(const std::vector<int>& lst, int n) { if (n == 0) return {{} }; if (lst.empty()) return {}; std::vector<std::vector<int>> result; std::vector<int> rest(lst.begin() + 1, lst.end()); auto combs = combinations(rest, n - 1); for (auto& c : combs) { c.insert(c.begin(), lst[0]); result.push_back(c); } auto without_first = combinations(rest, n); result.insert(result.end(), without_first.begin(), without_first.end()); return result; }',
+                            'std::map<int, int> count_occurrences(const std::vector<int>& lst) { std::map<int, int> counts; for (int x : lst) counts[x]++; return counts; }',
+                            'std::vector<std::vector<int>> transpose(const std::vector<std::vector<int>>& matrix) { std::vector<std::vector<int>> result(matrix[0].size(), std::vector<int>(matrix.size())); for (size_t i = 0; i < matrix.size(); ++i) for (size_t j = 0; j < matrix[i].size(); ++j) result[j][i] = matrix[i][j]; return result; }',
+                            'std::vector<int> sieve_of_eratosthenes(int n) { std::vector<bool> is_prime(n + 1, true); std::vector<int> primes; for (int p = 2; p * p <= n; p++) { if (is_prime[p]) { for (int i = p * p; i <= n; i += p) is_prime[i] = false; } } for (int p = 2; p <= n; p++) { if (is_prime[p]) primes.push_back(p); } return primes; }'
+                        ]
+                    },
+
+
+                    c: {
+                        easy: [
+                            '#include <stdio.h>\nint main() { printf("Hello, World!\\n"); return 0; }',
+                            'int x = 5;',
+                            'char name[] = "John";',
+                            'if (1) { printf("True\\n"); }',
+                            'int sum = 1 + 2;',
+                            'int arr[] = {1, 2, 3};',
+                            'struct Obj { char key[20]; }; struct Obj obj; strcpy(obj.key, "value");',
+                            'int greet() { return printf("Hello\\n"); }',
+                            'int is_true = 1;',
+                            'double num = rand() / (double)RAND_MAX;',
+                            'for (int i = 0; i < 5; i++) { printf("%d\\n", i); }',
+                            'while (x < 10) { x++; }',
+                            'int square(int n) { return n * n; }',
+                            'int list_of_numbers[] = {1, 2, 3, 4, 5};',
+                            'int max_value = list_of_numbers[0]; for (int i = 1; i < 5; i++) if (list_of_numbers[i] > max_value) max_value = list_of_numbers[i];',
+                            'int min_value = list_of_numbers[0]; for (int i = 1; i < 5; i++) if (list_of_numbers[i] < min_value) min_value = list_of_numbers[i];',
+                            'int length = sizeof(list_of_numbers) / sizeof(list_of_numbers[0]);',
+                            'int first_item = list_of_numbers[0];',
+                            'int last_item = list_of_numbers[length - 1];',
+                            'list_of_numbers[5] = 6;',
+                            'for (int i = 0; i < length; i++) { if (list_of_numbers[i] == 3) { for (int j = i; j < length - 1; j++) list_of_numbers[j] = list_of_numbers[j + 1]; length--; break; } }',
+                            'int is_empty = (length == 0);',
+                            'for (int i = 0; i < length; i++) { for (int j = i + 1; j < length; j++) { if (list_of_numbers[i] > list_of_numbers[j]) { int temp = list_of_numbers[i]; list_of_numbers[i] = list_of_numbers[j]; list_of_numbers[j] = temp; } } }',
+                            'int tuple_example[3] = {1, 2, 3};',
+                            'int set_example[3] = {1, 2, 3};',
+                            'struct Dict { char key[20]; int value; }; struct Dict dict_example; strcpy(dict_example.key, "a"); dict_example.value = 1;'
+                        ],
+
+                        medium: [
+                            '#include <stdio.h>\nint main() { for (int i = 0; i < 10; i++) { printf("%d\\n", i); } return 0; }',
+                            'int add(int a, int b) { return a + b; }',
+                            'int arr[] = {1, 2, 3}; for (int i = 0; i < 3; i++) arr[i] *= 2;',
+                            'struct Obj { char key[20]; }; struct Obj obj; strcpy(obj.key, "value"); printf("%s\\n", obj.key);',
+                            'double x = rand() % 100;',
+                            'char str[] = "Hello"; for (int i = 0; str[i]; i++) str[i] = toupper(str[i]);',
+                            'int arr[] = {1, 2, 3}; int sum = 0; for (int i = 0; i < 3; i++) sum += arr[i];',
+                            'int is_even(int num) { return num % 2 == 0; }',
+                            'int arr[] = {1, 2, 3}; int new_length = 0; for (int i = 0; i < 3; i++) { if (arr[i] > 1) { arr[new_length++] = arr[i]; } }',
+                            'int arr[] = {1, 2, 3}; for (int i = 0; i < 3; i++) arr[i] *= 2;',
+                            'int factorial(int n) { return n == 0 ? 1 : n * factorial(n - 1); }',
+                            'int fibonacci(int n) { return n <= 1 ? n : fibonacci(n - 1) + fibonacci(n - 2); }',
+                            'try { int x = 1 / 0; } catch (const char* e) { printf("Error\\n"); }',
+                            'FILE *file = fopen("file.txt", "r"); char content[100]; if (file) { fgets(content, sizeof(content), file); fclose(file); }',
+                            'double area = M_PI * (radius * radius);',
+                            'int filter_even(int* numbers, int length) { int count = 0; for (int i = 0; i < length; i++) { if (numbers[i] % 2 == 0) count++; } return count; }',
+                            'struct Dict { char key[20]; int value; }; struct Dict merge_dicts(struct Dict dict1, struct Dict dict2) { struct Dict merged; strcpy(merged.key, dict1.key); merged.value = dict1.value + dict2.value; return merged; }',
+                            'int count_vowels(const char* s) { int count = 0; for (int i = 0; s[i]; i++) { if (strchr("aeiouAEIOU", s[i])) count++; } return count; }',
+                            'int is_palindrome(const char* s) { int len = strlen(s); for (int i = 0; i < len / 2; i++) { if (s[i] != s[len - i - 1]) return 0; } return 1; }',
+                            'void flatten(int** lst, int rows, int* result, int* result_size) { for (int i = 0; i < rows; i++) { for (int j = 0; lst[i][j] != -1; j++) { result[(*result_size)++] = lst[i][j]; } } }',
+                            'void debounce(void (*func)(), int wait) { /* Placeholder for debounce function */ }',
+                            'void throttle(void (*func)(), int limit) { /* Placeholder for throttle function */ }',
+                            'int map_example(int* arr, int length) { for (int i = 0; i < length; i++) arr[i] *= 2; return 0; }',
+                            'void zip_example(int* arr1, int* arr2, int length) { for (int i = 0; i < length; i++) printf("(%d, %d)\\n", arr1[i], arr2[i]); }',
+                            'void enumerate_example(int* arr, int length) { for (int i = 0; i < length; i++) printf("Index: %d, Value: %d\\n", i, arr[i]); }'
+                        ],
+
+                        hard: [
+                            'int fibonacci(int n) { return n <= 1 ? n : fibonacci(n - 1) + fibonacci(n - 2); }',
+                            'int factorial(int n) { return n == 0 ? 1 : n * factorial(n - 1); }',
+                            'int arr[] = {3, 1, 4, 1, 5}; qsort(arr, 5, sizeof(int), compare);',
+                            'int arr[] = {1, 2, 2, 3}; int new_length = 0; for (int i = 0; i < 4; i++) { if (arr[i] != arr[i + 1]) arr[new_length++] = arr[i]; }',
+                            'char* reversed(const char* str) { int len = strlen(str); char* rev = malloc(len + 1); for (int i = 0; i < len; i++) rev[i] = str[len - i - 1]; rev[len] = \'\\0\'; return rev; }',
+                            'int is_prime(int num) { if (num <= 1) return 0; for (int i = 2; i <= sqrt(num); i++) if (num % i == 0) return 0; return 1; }',
+                            'void flatten(int** arr, int rows, int* result, int* result_size) { for (int i = 0; i < rows; i++) { for (int j = 0; arr[i][j] != -1; j++) { result[(*result_size)++] = arr[i][j]; } } }',
+                            'struct Dict memoize(int (*fn)(int)) { struct Dict cache; cache.key = malloc(100); cache.value = 0; return cache; }',
+                            'void debounce(void (*fn)(), int delay) { /* Placeholder for debounce function */ }',
+                            'void throttle(void (*fn )(), int limit) { /* Placeholder for throttle function */ }',
+                            'void quicksort(int* arr, int low, int high) { if (low < high) { int pi = partition(arr, low, high); quicksort(arr, low, pi - 1); quicksort(arr, pi + 1, high); } }',
+                            'void merge_sort(int* arr, int left, int right) { if (left < right) { int mid = left + (right - left) / 2; merge_sort(arr, left, mid); merge_sort(arr, mid + 1, right); merge(arr, left, mid, right); } }',
+                            'int binary_search(int* arr, int size, int target) { int low = 0, high = size - 1; while (low <= high) { int mid = (low + high) / 2; if (arr[mid] < target) low = mid + 1; else if (arr[mid] > target) high = mid - 1; else return mid; } return -1; }',
+                            'void permutations(int* arr, int size) { if (size == 1) { print(arr); return; } for (int i = 0; i < size; i++) { permutations(arr, size - 1); if (size % 2 == 0) { int temp = arr[i]; arr[i] = arr[size - 1]; arr[size - 1] = temp; } else { int temp = arr[0]; arr[0] = arr[size - 1]; arr[size - 1] = temp; } } }',
+                            'void combinations(int* arr, int n, int r) { int data[r]; combinationUtil(arr, data, 0, n - 1, 0, r); }',
+                            'void count_occurrences(int* arr, int size) { int count[100] = {0}; for (int i = 0; i < size; i++) count[arr[i]]++; for (int i = 0; i < 100; i++) if (count[i]) printf("%d occurs %d times\\n", i, count[i]); }',
+                            'void transpose(int** matrix, int rows, int cols) { for (int i = 0; i < rows; i++) { for (int j = 0; j < cols; j++) { printf("%d ", matrix[j][i]); } printf("\\n"); } }',
+                            'int* sieve_of_eratosthenes(int n) { int* primes = malloc((n + 1) * sizeof(int)); for (int i = 0; i <= n; i++) primes[i] = 1; for (int p = 2; p * p <= n; p++) { if (primes[p]) { for (int i = p * p; i <= n; i += p) primes[i] = 0; } } return primes; }'
+                        ]
+                    },
+
+
+                    java: {
+                        easy: [
+                            'System.out.println("Hello, World!");',
+                            'int x = 5;',
+                            'String name = "John";',
+                            'if (true) { System.out.println("True"); }',
+                            'int sum = 1 + 2;',
+                            'int[] arr = {1, 2, 3};',
+                            'class Obj { String key; } Obj obj = new Obj(); obj.key = "value";',
+                            'String greet() { return "Hello"; }',
+                            'boolean isTrue = true;',
+                            'double num = Math.random();',
+                            'for (int i = 0; i < 5; i++) { System.out.println(i); }',
+                            'while (x < 10) { x++; }',
+                            'int square(int n) { return n * n; }',
+                            'List<Integer> listOfNumbers = Arrays.asList(1, 2, 3, 4, 5);',
+                            'int maxValue = Collections.max(listOfNumbers);',
+                            'int minValue = Collections.min(listOfNumbers);',
+                            'int length = listOfNumbers.size();',
+                            'int firstItem = listOfNumbers.get(0);',
+                            'int lastItem = listOfNumbers.get(listOfNumbers.size() - 1);',
+                            'listOfNumbers.add(6);',
+                            'listOfNumbers.remove(Integer.valueOf(3));',
+                            'boolean isEmpty = listOfNumbers.isEmpty();',
+                            'Collections.sort(listOfNumbers);',
+                            'Collections.reverse(listOfNumbers);',
+                            'Tuple<Integer, Integer, Integer> tupleExample = new Tuple<>(1, 2, 3);',
+                            'Set<Integer> setExample = new HashSet<>(Arrays.asList(1, 2, 3));',
+                            'Map<String, Integer> dictExample = new HashMap<>(); dictExample.put("a", 1); dictExample.put("b", 2);'
+                        ],
+
+                        medium: [
+                            'for (int i = 0; i < 10; i++) { System.out.println(i); }',
+                            'int add(int a, int b) { return a + b; }',
+                            'List<Integer> arr = Arrays.asList(1, 2, 3); for (int x : arr) x *= 2;',
+                            'class Obj { String key; } Obj obj = new Obj(); obj.key = "value"; System.out.println(obj.key);',
+                            'double x = new Random().nextInt(100);',
+                            'String str = "Hello"; str = str.toUpperCase();',
+                            'List<Integer> arr = Arrays.asList(1, 2, 3); int sum = arr.stream().mapToInt(Integer::intValue).sum();',
+                            'Predicate<Integer> isEven = num -> num % 2 == 0;',
+                            'List<Integer> arr = Arrays.asList(1, 2, 3); arr.removeIf(x -> x <= 1);',
+                            'List<Integer> arr = Arrays.asList(1, 2, 3); arr = arr.stream().map(x -> x * 2).collect(Collectors.toList());',
+                            'int factorial(int n) { return n == 0 ? 1 : n * factorial(n - 1); }',
+                            'int fibonacci(int n) { return n <= 1 ? n : fibonacci(n - 1) + fibonacci(n - 2); }',
+                            'try { int x = 1 / 0; } catch (ArithmeticException e) { System.out.println("Error"); }',
+                            'try (BufferedReader br = new BufferedReader(new FileReader("file.txt"))) { String content = br.readLine(); }',
+                            'double area = Math.PI * (radius * radius);',
+                            'List<Integer> filterEven(List<Integer> numbers) { return numbers.stream().filter(n -> n % 2 == 0).collect(Collectors.toList()); }',
+                            'Map<String, Integer> mergeDicts(Map<String, Integer> dict1, Map<String, Integer> dict2) { Map<String, Integer> merged = new HashMap<>(dict1); merged.putAll(dict2); return merged; }',
+                            'List<Integer> flatten(List<List<Integer>> lst) { return lst.stream().flatMap(List::stream).collect(Collectors.toList()); }',
+                            'void debounce(Runnable func, int wait) { /* Placeholder for debounce function */ }',
+                            'void throttle(Runnable func, int limit) { /* Placeholder for throttle function */ }',
+                            'List<Integer> mapExample() { return arr.stream().map(x -> x * 2).collect(Collectors.toList()); }',
+                            'List<Pair<Integer, String>> zipExample() { return IntStream.range(0, Math.min(list1.size(), list2.size())).mapToObj(i -> new Pair<>(list1.get(i), list2.get(i))).collect(Collectors.toList()); }',
+                            'List<Pair<Integer, Character>> enumerateExample() { return IntStream.range(0, list.size()).mapToObj(i -> new Pair<>(i, list.get(i))).collect(Collectors.toList()); }'
+                        ],
+
+                        hard: [
+                            'int fibonacci(int n) { return n <= 1 ? n : fibonacci(n - 1) + fibonacci(n - 2); }',
+                            'int factorial(int n) { return n == 0 ? 1 : n * factorial(n - 1); }',
+                            'List<Integer> arr = Arrays.asList(3, 1, 4, 1, 5); Collections.sort(arr);',
+                            'List<Integer> arr = Arrays.asList(1, 2, 2, 3); Collections.sort(arr); arr = arr.stream().distinct().collect(Collectors.toList());',
+                            'String reversed(String str) { return new StringBuilder(str).reverse().toString(); }',
+                            'boolean isPrime(int num) { for (int i = 2; i < num; i++) if (num % i == 0) return false; return num > 1; }',
+                            'Map<String, Integer> memoize(Function<String, Integer> fn) { Map<String, Integer> cache = new HashMap<>(); return (String key) -> cache.computeIfAbsent(key, fn); }',
+                            'void debounce(Runnable fn, int delay) { /* Placeholder for debounce function */ }',
+                            'void throttle(Runnable fn, int limit) { /* Placeholder for throttle function */ }',
+                            'void quicksort(List<Integer> arr) { if (arr.size() <= 1) return; int pivot = arr.get(arr.size() / 2); List<Integer> left = new ArrayList<>(), right = new ArrayList<>(); for (int x : arr) { if (x < pivot) left.add(x); else if (x > pivot) right.add(x); } quicksort(left); quicksort(right); arr.clear(); arr.addAll(left); arr.add(pivot); arr.addAll(right); }',
+                            'List<Integer> mergeSort(List<Integer> arr) { if (arr.size() <= 1) return arr; int mid = arr.size() / 2; List<Integer> left = mergeSort(arr.subList(0, mid)); List<Integer> right = mergeSort(arr.subList(mid, arr.size())); return merge(left, right); }',
+                            'int binarySearch(List<Integer> arr, int target) { int low = 0, high = arr.size() - 1; while (low <= high) { int mid = (low + high) / 2; if (arr.get(mid) < target) low = mid + 1; else if (arr.get(mid) > target) high = mid - 1; else return mid; } return -1; }',
+
+                        ]
+                    },
+
+
+                    javascript: {
+                        easy: [
+                            'console.log("Hello, World!");',
+                            'let x = 5;',
+                            'let name = "John";',
+                            'if (true) { console.log("True"); }',
+                            'let sum = 1 + 2;',
+                            'let arr = [1, 2, 3];',
+                            'let obj = { key: "value" };',
+                            'function greet() { return "Hello"; }',
+                            'let isTrue = true;',
+                            'let num = Math.random();',
+                            'for (let i = 0; i < 5; i++) { console.log(i); }',
+                            'while (x < 10) { x++; }',
+                            'function square(n) { return n * n; }',
+                            'let listOfNumbers = [1, 2, 3, 4, 5];',
+                            'let maxValue = Math.max(...listOfNumbers);',
+                            'let minValue = Math.min(...listOfNumbers);',
+                            'let length = listOfNumbers.length;',
+                            'let firstItem = listOfNumbers[0];',
+                            'let lastItem = listOfNumbers[listOfNumbers.length - 1];',
+                            'listOfNumbers.push(6);',
+                            'listOfNumbers.splice(listOfNumbers.indexOf(3), 1);',
+                            'let isEmpty = listOfNumbers.length === 0;',
+                            'listOfNumbers.sort();',
+                            'listOfNumbers.reverse();',
+                            'let tupleExample = [1, 2, 3];',
+                            'let setExample = new Set([1, 2, 3]);',
+                            'let dictExample = { a: 1, b: 2 };'
+                        ],
+
+                        medium: [
+                            'for (let i = 0; i < 10; i++) { console.log(i); }',
+                            'function add(a, b) { return a + b; }',
+                            'let arr = [1, 2, 3]; arr = arr.map(x => x * 2);',
+                            'let obj = { key: "value" }; console.log(obj.key);',
+                            'let x = Math.floor(Math.random() * 100);',
+                            'let str = "Hello".toUpperCase();',
+                            'let sum = arr.reduce((acc, val) => acc + val, 0);',
+                            'let isEven = num => num % 2 === 0;',
+                            'arr = arr.filter(x => x > 1);',
+                            'arr = arr.map(x => x * 2);',
+                            'function factorial(n) { return n === 0 ? 1 : n * factorial(n - 1); }',
+                            'function fibonacci(n) { return n <= 1 ? n : fibonacci(n - 1) + fibonacci(n - 2); }',
+                            'try { let x = 1 / 0; } catch (e) { console.log("Error"); }',
+                            'let content = fs.readFileSync("file.txt", "utf8");',
+                            'let area = Math.PI * (radius ** 2);',
+                            'function filterEven(numbers) { return numbers.filter(n => n % 2 === 0); }',
+                            'function mergeDicts(dict1, dict2) { return { ...dict1, ...dict2 }; }',
+                            'function countVowels(s) { return (s.match(/[aeiou]/gi) || []).length; }',
+                            'function isPalindrome(s) { return s === s.split("").reverse().join(""); }',
+                            'function flatten(lst) { return lst.reduce((acc, val) => acc.concat(val), []); }',
+                            'function debounce(func, wait) { /* Placeholder for debounce function */ }',
+                            'function throttle(func, limit) { /* Placeholder for throttle function */ }',
+                            'function mapExample() { return arr.map(x => x * 2); }',
+                            'function zipExample(arr1, arr2) { return arr1.map((k, i) => [k, arr2[i]]); }',
+                            'function enumerateExample(arr) { return arr.map((value, index) => [index, value]); }'
+                        ],
+
+                        hard: [
+                            'function fibonacci(n) { return n <= 1 ? n : fibonacci(n - 1) + fibonacci(n - 2); }',
+                            'function factorial(n) { return n === 0 ? 1 : n * factorial(n - 1); }',
+                            'let arr = [3, 1, 4, 1, 5]; arr.sort();',
+                            'let arr = [1, 2, 2, 3]; arr = [...new Set(arr)];',
+                            'function reversed(str) { return str.split("").reverse().join(""); }',
+                            'function isPrime(num) { for (let i = 2; i < num; i++) if (num % i === 0) return false; return num > 1; }',
+                            'function flatten(arr) { return arr.reduce((flat, toFlatten) => flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten), []); }',
+                            'function memoize(fn) { const cache = {}; return function(...args) { const key = JSON.stringify(args); if (cache[key]) return cache[key]; const result = fn(...args); cache[key] = result; return result; }; }',
+                            'function debounce(func, wait) { let timeout; return function(...args) { const context = this; clearTimeout(timeout); timeout = setTimeout(() => func.apply(context, args), wait); }; }',
+                            'function throttle(func, limit) { let lastFunc; let lastRan; return function() { const context = this; const args = arguments; if (!lastRan) { func.apply(context, args); lastRan = Date.now(); } else { clearTimeout(lastFunc); lastFunc = setTimeout(() => { if ((Date.now() - lastRan) >= limit) { func.apply(context, args); lastRan = Date.now(); } }, limit - (Date.now() - lastRan)); } }; }',
+                            'function quicksort(arr) { if (arr.length <= 1) return arr; const pivot = arr[arr.length - 1]; const left = arr.slice(0, arr.length - 1).filter(x => x < pivot); const right = arr.slice(0, arr.length - 1).filter(x => x >= pivot); return [...quicksort(left), pivot, ...quicksort(right)]; }',
+                            'function mergeSort(arr) { if (arr.length <= 1) return arr; const mid = Math.floor(arr.length / 2); const left = mergeSort(arr.slice(0, mid)); const right = mergeSort(arr.slice(mid)); return merge(left, right); } function merge(left, right) { const result = []; while (left.length && right.length) { if (left[0] < right[0]) result.push(left.shift()); else result.push(right.shift()); } return result.concat(left, right); }',
+                            'function binarySearch(arr, target) { let low = 0, high = arr.length - 1; while (low <= high) { const mid = Math.floor((low + high) / 2); if (arr[mid] < target) low = mid + 1; else if (arr[mid] > target) high = mid - 1; else return mid; } return -1; }',
+                            'function permutations(lst) { if (lst.length === 0) return [[]]; return lst.flatMap((x, i) => permutations(lst.filter((_, j) => j !== i)).map(p => [x, ...p])); }',
+                            'function combinations(lst, n) { if (n === 0) return [[]]; if (lst.length === 0) return []; return combinations(lst.slice(1), n - 1).map(c => [lst[0], ...c]).concat(combinations(lst.slice(1), n)); }',
+                            'function countOccurrences(lst) { const counts = {}; lst.forEach(x => counts[x] = (counts[x] || 0) + 1); return counts; }',
+                            'function transpose(matrix) { return matrix[0].map((_, colIndex) => matrix.map(row => row[colIndex])); }',
+                            'function sieveOfEratosthenes(n) { const primes = []; const isPrime = Array(n + 1).fill(true); for (let p = 2; p * p <= n; p++) { if (isPrime[p]) { for (let i = p * p; i <= n; i += p) isPrime[i] = false; } } for (let p = 2; p <= n; p++) { if (isPrime[p]) primes.push(p); } return primes; }'
+                        ]
+                    }
+                };
+
+                // Function to shuffle an array
+                function shuffleArray(array) {
+                    for (let i = array.length - 1; i > 0; i--) {
+                        let j = Math.floor(Math.random() * (i + 1));
+                        [array[i], array[j]] = [array[j], array[i]];
+                    }
+                }
+
+                // Function to get exactly 10 random snippets based on difficulty and language
+                function getRandomSnippets(language, difficulty) {
+                    let snippets = snippetsByLanguageAndDifficulty[language][difficulty];
+                    shuffleArray(snippets);
+                    return snippets.slice(0, 10);
+                }
+
+                function startChallenge() {
+                    difficulty = document.getElementById("difficulty").value;
+                    language = document.getElementById("language").value;
+                    snippets = getRandomSnippets(language, difficulty);
+                    currentSnippetIndex = 0;
+                    totalWPM = 0;
+                    totalAccuracy = 0;
+                    totalTime = 0;
+                    document.getElementById("final-results").style.display = "none";
+                    document.getElementById("user-input").disabled = false;
+                    document.getElementById("user-input").focus();
+                    loadNextSnippet();
+                }
+
+                function loadNextSnippet() {
+                    if (currentSnippetIndex >= 10) {
+                        showFinalResults();
+                        return;
+                    }
+                    document.getElementById("code-snippet").innerText = snippets[currentSnippetIndex];
+                    document.getElementById("user-input").value = "";
+                    document.getElementById("accuracy").innerText = "100";
+                    document.getElementById("wpm").innerText = "0";
+                    document.getElementById("snippet-count").innerText = `${currentSnippetIndex + 1}/10`;
+                    timeLeft = 60;
+                    document.getElementById("time").innerText = timeLeft;
+                    timerStarted = false;
+                    document.getElementById("user-input").addEventListener("input", startTimer);
+                    document.getElementById("user-input").addEventListener("input", checkAccuracy);
+                }
+
+
+                function startTimer() {
+                    if (!timerStarted) {
+                        timerStarted = true;
+                        startTime = new Date().getTime();
+                        timer = setInterval(updateTimer, 1000);
+                    }
+                    checkCompletion();
+                }
+
+                function updateTimer() {
+                    timeLeft--;
+                    document.getElementById("time").innerText = timeLeft;
+                    if (timeLeft <= 0) {
+                        clearInterval(timer);
+                        calculateResults();
+                    }
+                }
+
+                function checkCompletion() {
+                    let userText = document.getElementById("user-input").value;
+                    if (userText === snippets[currentSnippetIndex]) {
+                        clearInterval(timer);
+                        calculateResults();
+                    }
+                }
+
+                function checkAccuracy() {
+                    let userText = document.getElementById("user-input").value;
+                    let correctChars = 0;
+                    for (let i = 0; i < userText.length; i++) {
+                        if (userText[i] === snippets[currentSnippetIndex][i]) correctChars++;
+                    }
+                    let accuracy = ((correctChars / userText.length) * 100).toFixed(2);
+                    if (userText.length === 0) accuracy = 100;
+                    document.getElementById("accuracy").innerText = accuracy;
+                }
+
+                function calculateResults() {
+                    let userText = document.getElementById("user-input").value;
+                    let wordsTyped = userText.split(" ").length;
+                    let elapsedTime = (60 - timeLeft) || 1;
+                    let wpm = Math.round(wordsTyped / (elapsedTime / 60));
+                    let accuracy = parseFloat(document.getElementById("accuracy").innerText);
+                    totalWPM += wpm;
+                    totalAccuracy += accuracy;
+                    totalTime += elapsedTime;
+                    currentSnippetIndex++;
+                    loadNextSnippet();
+                }
+
+                function showFinalResults() {
+                    document.getElementById("final-results").style.display = "block";
+                    document.getElementById("avg-wpm").innerText = (totalWPM / 10).toFixed(2);
+                    document.getElementById("avg-accuracy").innerText = (totalAccuracy / 10).toFixed(2);
+                    document.getElementById("total-time").innerText = totalTime;
+                }
+
+                // Play Again
+                document.getElementById("play-again").addEventListener("click", function () {
+                    location.reload();
+                });
+
+
+
+            </script>
+</body>
+
+</html>

@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rapid-Fire MCQ Quiz</title>
+    <style>
+        /* Base Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            background: #121212;
+            color: #e0e0e0;
+            height: 90vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        /* Quiz Container */
+        .quiz-container {
+            width: 50%;
+            max-width: 600px;
+            background: #1e1e1e;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        /* Title & Question */
+        #question {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #f8f9fa;
+        }
+
+        /* Selection Buttons */
+        .selection-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        /* Answer Buttons Grid */
+        .btn-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        /* Buttons - Classic Dark Style */
+        button {
+            padding: 14px;
+            font-size: 18px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            margin-right: 15px;
+            color: #ffffff;
+            background: #252525;
+            border: 1px solid #444;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Hover & Active Effects */
+        button:hover {
+            background: #333;
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: scale(0.97);
+        }
+
+        /* Timer Styling */
+        #timer {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+            padding: 8px 15px;
+            background: #252525;
+            border-radius: 8px;
+            display: inline-block;
+            min-width: 50px;
+        }
+
+        /* Hide Elements */
+        .hide {
+            display: none;
+        }
+
+        /* Result Container */
+        #result {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+            color: #4ce3c7;
+        }
+
+        /* Smooth Fade-In Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Mobile Optimization */
+        @media (max-width: 768px) {
+            .quiz-container {
+                width: 90%;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="quiz-container">
+        <h1>Rapid-Fire MCQ Quiz</h1>
+        <button id="start-btn">Start Quiz</button>
+        <div id="category-container" class="hide">
+            <h2>Select Category</h2>
+            <button onclick="selectCategory('tech')">Tech</button>
+            <button onclick="selectCategory('zener')">Zener Diode</button>
+        </div>
+        <div id="difficulty-container" class="hide">
+            <h2>Select Difficulty</h2>
+            <button onclick="selectDifficulty('easy')">Easy</button>
+            <button onclick="selectDifficulty('medium')">Medium</button>
+            <button onclick="selectDifficulty('hard')">Hard</button>
+        </div>
+        <div id="question-container" class="hide">
+            <p id="question-text"></p>
+            <div id="answer-buttons" class="btn-grid"></div>
+            <p id="timer">Time Left: <span id="time">10</span> sec</p>
+        </div>
+        <div id="result" class="hide"></div>
+    </div>
+    <script>
+        let selectedCategory, selectedDifficulty;
+        let score = 0;
+        const startButton = document.getElementById("start-btn");
+        const categoryContainer = document.getElementById("category-container");
+        const difficultyContainer = document.getElementById("difficulty-container");
+        const questionContainer = document.getElementById("question-container");
+        const questionText = document.getElementById("question-text");
+        const answerButtons = document.getElementById("answer-buttons");
+        const timerDisplay = document.getElementById("time");
+        const resultContainer = document.getElementById("result");
+        let shuffledQuestions, currentQuestionIndex, timeLeft, timerInterval;
+
+        startButton.addEventListener("click", () => {
+            startButton.classList.add("hide");
+            categoryContainer.classList.remove("hide");
+        });
+
+        function selectCategory(category) {
+            selectedCategory = category;
+            categoryContainer.classList.add("hide");
+            difficultyContainer.classList.remove("hide");
+        }
+
+        function selectDifficulty(difficulty) {
+            selectedDifficulty = difficulty;
+            difficultyContainer.classList.add("hide");
+            startQuiz();
+        }
+
+        function startQuiz() {
+            score = 0;
+            shuffledQuestions = getQuestions(selectedCategory, selectedDifficulty).sort(() => Math.random() - 0.5).slice(0, 15);
+            currentQuestionIndex = 0;
+            questionContainer.classList.remove("hide");
+            setNextQuestion();
+        }
+
+        function getQuestions(category, difficulty) {
+            const questions = {
+                tech: {
+                    easy: [
+                        {
+                            question: "What does CPU stand for?",
+                            answers: ["Central Processing Unit", "Computer Personal Unit", "Central Processor Utility", "Control Processing Unit"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the primary language of web development?",
+                            answers: ["Python", "C++", "JavaScript", "Java"],
+                            correct: 2
+                        },
+
+                        {
+                            question: "What does RAM stand for?",
+                            answers: ["Read Access Memory", "Random Access Memory", "Read And Memory", "Random Access Module"],
+                            correct: 1
+                        },
+
+                        {
+                            question: "What is the main function of the operating system?",
+                            answers: ["Manage hardware resources", "Run applications", "Provide security", "All of the above"],
+                            correct: 3
+                        },
+
+                        {
+                            question: "Which of the following is a programming language?",
+                            answers: ["HTML", "CSS", "JavaScript", "XML"],
+                            correct: 2
+                        },
+
+                        {
+                            question: "What does HTTP stand for?",
+                            answers: ["HyperText Transfer Protocol", "HyperText Transmission Protocol", "HighText Transfer Protocol", "HyperText Transfer Process"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "Which device is used to connect to the internet?",
+                            answers: ["Router", "Switch", "Hub", "Modem"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the purpose of a firewall?",
+                            answers: ["To cool down the computer", "To protect against unauthorized access", "To speed up the internet", "To store data"],
+                            correct: 1
+                        },
+
+                        {
+                            question: "Which of the following is an example of an operating system?",
+                            answers: ["Windows", "Microsoft Office", "Google Chrome", "Adobe Photoshop"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What does GUI stand for?",
+                            answers: ["Graphical User Interface", "General User Interface", "Graphical Universal Interface", "General Universal Interface"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "Which of the following is a database management system?",
+                            answers: ["MySQL", "HTML", "CSS", "JavaScript"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the main purpose of an algorithm?",
+                            answers: ["To solve problems", "To store data", "To create graphics", "To manage memory"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "Which of the following is a markup language?",
+                            answers: ["HTML", "Python", "Java", "C++"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What does URL stand for?",
+                            answers: ["Uniform Resource Locator", "Universal Resource Locator", "Uniform Resource Link", "Universal Resource Link"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "Which of the following is a version control system?",
+                            answers: ["Git", "HTML", "CSS", "JavaScript"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the purpose of a compiler?",
+                            answers: ["To execute code", "To convert source code to machine code", "To debug code", "To write code"],
+                            correct: 1
+                        },
+
+                        {
+                            question: "Which of the following is a front-end framework?",
+                            answers: ["Django", "Flask", "React", "Spring"],
+                            correct: 2
+                        },
+
+                        {
+                            question: "What does SQL stand for?",
+                            answers: ["Structured Query Language", "Structured Question Language", "Simple Query Language", "Standard Query Language"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "Which of the following is a cloud storage service?",
+                            answers: ["Google Drive", "Microsoft Word", "Adobe Reader", "Notepad"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the main purpose of a web server?",
+                            answers: ["To host websites", "To store files", "To run applications", "To manage databases"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "Which of the following is a type of software?",
+                            answers: ["Operating System", "Hardware", "Network", "Protocol"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What does VPN stand for?",
+                            answers: ["Virtual Private Network", "Virtual Public Network", "Variable Private Network", "Variable Public Network"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the primary function of a CPU?",
+                            answers: ["Perform calculations", "Store data", "Display graphics", "Manage input/output"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is an IP address?",
+                            answers: ["A unique identifier for a device on a network", "A type of software", "A hardware component", "A programming language"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "Which of the following is a type of malware?",
+                            answers: ["Virus", "Router", "Firewall", "Switch"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What does SSD stand for?",
+                            answers: ["Solid State Drive", "Super Speed Drive", "Solid Storage Device", "Super Storage Drive"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the purpose of an API?",
+                            answers: ["To allow different software applications to communicate", "To store data", "To create graphics", "To manage memory"],
+                            correct: 0
+                        }
+                    ],
+
+
+                    medium: [
+                        {
+                            question: "What is the time complexity of binary search?",
+                            answers: ["O(n)", "O(log n)", "O(n log n)", "O(1)"],
+                            correct: 1
+                        },
+
+                        {
+                            question: "What is the main purpose of a database?",
+                            answers: ["To store and manage data", "To execute code", "To create graphics", "To manage memory"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "Which of the following is a NoSQL database?",
+                            answers: ["MongoDB", "MySQL", "PostgreSQL", "SQLite"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What does REST stand for?",
+                            answers: ["Representational State Transfer", "Resource State Transfer", "Representational Standard Transfer", "Resource Standard Transfer"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the purpose of a load balancer?",
+                            answers: ["To distribute network traffic", "To store data", "To execute code", "To manage memory"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "Which of the following is a programming paradigm?",
+                            answers: ["Object-oriented programming", "Database management", "Networking", "Web development"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the main function of a web browser?",
+                            answers: ["To display web pages", "To store files", "To run applications", "To manage databases"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What does DNS stand for?",
+                            answers: ["Domain Name System", "Dynamic Name System", "Domain Network System", "Dynamic Network System"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "Which of the following is a version control system?",
+                            answers: ["Git", "HTML", "CSS", "JavaScript"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the purpose of a debugger?",
+                            answers: ["To find and fix errors in code", "To execute code", "To create graphics", "To manage memory"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the main purpose of a network switch?",
+                            answers: ["To connect devices within a network", "To store data", "To execute code", "To manage memory"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the purpose of a proxy server?",
+                            answers: ["To act as an intermediary for requests", "To store data", "To execute code", "To manage memory"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the main function of a router?",
+                            answers: ["To direct data packets between networks", "To store data", "To execute code", "To manage memory"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What does SSL stand for?",
+                            answers: ["Secure Sockets Layer", "Secure System Layer", "Standard Sockets Layer", "Standard System Layer"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the purpose of a content delivery network (CDN)?",
+                            answers: ["To deliver content to users efficiently", "To store data", "To execute code", "To manage memory"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the main purpose of a web application firewall?",
+                            answers: ["To protect web applications from attacks", "To store data", "To execute code", "To manage memory"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the purpose of a data warehouse?",
+                            answers: ["To store large amounts of data for analysis", "To execute code", "To create graphics", "To manage memory"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the main function of a VPN?",
+                            answers: ["To create a secure connection over the internet", "To store data", "To execute code", "To manage memory"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What does the term 'cloud computing' refer to?",
+                            answers: ["Using remote servers to store and manage data", "Storing data on local servers", "Using physical hardware for computing", "None of the above"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the purpose of a software development lifecycle (SDLC)?",
+                            answers: ["To outline the stages of software development", "To execute code", "To create graphics", "To manage memory"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the main purpose of a data model?",
+                            answers: ["To define how data is structured and accessed", "To execute code", "To create graphics", "To manage memory"],
+                            correct: 0
+                        }
+                    ],
+
+
+                    hard: [
+                        {
+                            question: "Which sorting algorithm has the best average-case time complexity?",
+                            answers: ["Bubble Sort", "Merge Sort", "Quick Sort", "Selection Sort"],
+                            correct: 1
+                        },
+
+                        {
+                            question: "What is the time complexity of Dijkstra's algorithm?",
+                            answers: ["O(n^2)", "O(n log n)", "O(n)", "O(log n)"],
+                            correct: 1
+                        },
+
+                        {
+                            question: "What is the main purpose of a hash table?",
+                            answers: ["To provide fast data retrieval", "To store data in a sorted manner", "To execute code", "To manage memory"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the difference between a stack and a queue?",
+                            answers: ["Stack is LIFO, Queue is FIFO", "Stack is FIFO, Queue is LIFO", "Both are the same", "None of the above"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the purpose of a binary tree?",
+                            answers: ["To store hierarchical data", "To execute code", "To create graphics", "To manage memory"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the main function of a garbage collector in programming?",
+                            answers: ["To reclaim memory", "To execute code", "To create graphics", "To manage input/output"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the purpose of a mutex?",
+                            answers: ["To prevent race conditions", "To execute code", "To create graphics", "To manage memory"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the main purpose of a RESTful API?",
+                            answers: ["To allow communication between client and server", "To store data", "To execute code", "To manage memory"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the time complexity of merge sort?",
+                            answers: ["O(n log n)", "O(n^2)", "O(n)", "O(log n)"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the main purpose of a state machine?",
+                            answers: ["To manage states in a system", "To execute code", "To create graphics", "To manage memory"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the purpose of a design pattern?",
+                            answers: ["To provide reusable solutions to common problems", "To execute code", "To create graphics", "To manage memory"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the main function of a load balancer?",
+                            answers: ["To distribute incoming network traffic", "To store data", "To execute code", "To manage memory"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the purpose of a web crawler?",
+                            answers: ["To index web pages", "To execute code", "To create graphics", "To manage memory"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the main purpose of a content management system (CMS)?",
+                            answers: ["To manage digital content", "To execute code", "To create graphics", "To manage memory"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the purpose of a software framework?",
+                            answers: ["To provide a foundation for building applications", "To execute code", "To create graphics", "To manage memory"],
+                            correct: 0
+                        },
+
+                        {
+                            question: " What is the main function of a web server?",
+                            answers: ["To host websites", "To store files", "To run applications", "To manage databases"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the purpose of a microservices architecture?",
+                            answers: ["To build applications as a collection of loosely coupled services", "To execute code", "To create graphics", "To manage memory"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the main function of a continuous integration/continuous deployment (CI/CD) pipeline?",
+                            answers: ["To automate the software delivery process", "To execute code", "To create graphics", "To manage memory"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the purpose of a software library?",
+                            answers: ["To provide reusable code", "To execute code", "To create graphics", "To manage memory"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the main function of a network protocol?",
+                            answers: ["To define rules for data communication", "To execute code", "To create graphics", "To manage memory"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the purpose of a software development kit (SDK)?",
+                            answers: ["To provide tools for building applications", "To execute code", "To create graphics", "To manage memory"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the main function of a data structure?",
+                            answers: ["To organize and store data", "To execute code", "To create graphics", "To manage memory"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the purpose of a software testing framework?",
+                            answers: ["To provide tools for testing software", "To execute code", "To create graphics", "To manage memory"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the main function of a user interface (UI)?",
+                            answers: ["To allow users to interact with a system", "To execute code", "To create graphics", "To manage memory"],
+                            correct: 0
+                        }
+                    ]
+                },
+
+
+                zener: {
+                    easy: [
+                        {
+                            question: "What is the primary function of a Zener Diode?",
+                            answers: ["Rectification", "Voltage Regulation", "Amplification", "Oscillation"],
+                            correct: 1
+                        },
+
+                        {
+                            question: "What is the symbol for a Zener diode?",
+                            answers: ["A triangle with a line", "A rectangle", "A circle", "A triangle with a zigzag line"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the typical application of a Zener diode?",
+                            answers: ["Rectifier circuits", "Voltage reference", "Signal amplification", "Oscillator circuits"],
+                            correct: 1
+                        },
+
+                        {
+                            question: "What happens to a Zener diode when reverse-biased beyond its breakdown voltage?",
+                            answers: ["It conducts current", "It stops conducting", "It burns out", "It becomes a short circuit"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the breakdown voltage of a Zener diode?",
+                            answers: ["The voltage at which it starts conducting in reverse", "The maximum forward voltage", "The voltage drop across it", "The voltage rating of the diode"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the main difference between a Zener diode and a regular diode?",
+                            answers: ["Zener diodes can conduct in reverse", "Zener diodes have higher current ratings", "Zener diodes are used for rectification", "Zener diodes are cheaper"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the typical power rating for Zener diodes?",
+                            answers: ["0.1W to 5W", "10W to 50W", "1W to 10W", "0.01W to 0.1W"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the effect of temperature on the Zener breakdown voltage?",
+                            answers: ["It increases the breakdown voltage", "It decreases the breakdown voltage", "It has no effect", "It causes the diode to fail"],
+                            correct: 1
+                        },
+
+                        {
+                            question: "What is the maximum reverse current a Zener diode can handle called?",
+                            answers: ["Zener current", "Reverse saturation current", "Forward current", "Breakdown current"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the typical range of Zener breakdown voltages?",
+                            answers: ["0.1V to 100V", "1V to 200V", "5V to 50V", "10V to 1000V"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the primary use of a Zener diode in a voltage regulator circuit?",
+                            answers: ["To increase voltage", "To decrease voltage", "To maintain a constant voltage", "To rectify AC voltage"],
+                            correct: 2
+                        },
+
+                        {
+                            question: "What is the effect of increasing the load resistance in a Zener diode voltage regulator?",
+                            answers: ["Increases output voltage", "Decreases output voltage", "No effect on output voltage", "Causes the Zener to fail"],
+                            correct: 1
+                        },
+
+                        {
+                            question: "What is the typical reverse voltage rating for a Zener diode?",
+                            answers: ["1V to 5V", "5V to 100V", "100V to 200V", "200V to 1000V"],
+                            correct: 1
+                        },
+
+                        {
+                            question: "What is the main advantage of using a Zener diode for voltage regulation?",
+                            answers: ["Low cost", "Simplicity", "High efficiency", "All of the above"],
+                            correct: 3
+                        },
+
+                        {
+                            question: "What is the primary characteristic of a Zener diode in the breakdown region?",
+                            answers: ["Constant voltage", "Constant current", "Variable voltage", "Variable current"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the purpose of a series resistor in a Zener diode circuit?",
+                            answers: ["To limit current", "To increase voltage", "To decrease voltage", "To stabilize temperature"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What happens to the Zener diode if the reverse voltage exceeds its breakdown voltage significantly?",
+                            answers: ["It operates normally", "It may get damaged", "It stops conducting", "It becomes a regular diode"],
+                            correct: 1
+                        },
+
+                        {
+                            question: "What is the typical response time of a Zener diode?",
+                            answers: ["Microseconds", "Milliseconds", "Seconds", "Nanoseconds"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the main application of a Zener diode in a power supply circuit?",
+                            answers: ["Rectification", "Voltage regulation", "Signal amplification", "Filtering"],
+                            correct: 1
+                        },
+
+                        {
+                            question: "What is the effect of using a Zener diode in parallel with a load?",
+                            answers: ["It increases the load voltage", "It stabilizes the load voltage", "It decreases the load voltage", "It has no effect"],
+                            correct: 1
+                        },
+
+                        {
+                            question: "What is the primary reason for using a Zener diode in a voltage reference circuit?",
+                            answers: ["To provide a stable reference voltage", "To amplify signals", "To rectify AC voltage", "To filter noise"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the relationship between Zener voltage and temperature coefficient?",
+                            answers: ["Higher Zener voltage means higher temperature coefficient", "Lower Zener voltage means lower temperature coefficient", "They are inversely related", "They are independent"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the main disadvantage of using Zener diodes for voltage regulation?",
+                            answers: ["Limited current handling", "High cost", "Complexity", "Low efficiency"],
+                            correct: 0
+                        }
+                    ],
+
+
+                    medium: [
+                        {
+                            question: "In which region does a Zener diode operate when regulating voltage?",
+                            answers: ["Forward Bias", "Breakdown Region", "Cutoff Region", "Saturation Region"],
+                            correct: 1
+                        },
+
+                        {
+                            question: "What is the effect of series resistance on the performance of a Zener diode?",
+                            answers: ["Increases output voltage", "Decreases output voltage", "Stabilizes output voltage", "Has no effect"],
+                            correct: 1
+                        },
+
+                        {
+                            question: "What is the typical temperature coefficient for Zener diodes?",
+                            answers: ["Positive", "Negative", "Zero", "Variable"],
+                            correct: 1
+                        },
+
+                        {
+                            question: "What is the main purpose of a Zener diode in a clipping circuit?",
+                            answers: ["To limit voltage", "To amplify signals", "To rectify AC voltage", "To filter noise"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the effect of increasing the Zener diode's breakdown voltage?",
+                            answers: ["Increases current", "Decreases current", "No effect on current", "Increases power dissipation"],
+                            correct: 3
+                        },
+
+                        {
+                            question: "What is the primary reason for using a Zener diode in a voltage divider circuit?",
+                            answers: ["To provide a stable output voltage", "To increase voltage", "To decrease voltage", "To rectify AC voltage"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the main characteristic of a Zener diode in the reverse breakdown region?",
+                            answers: ["Constant current", "Constant voltage", "Variable current", "Variable voltage"],
+                            correct: 1
+                        },
+
+                        {
+                            question: "What is the effect of load changes on a Zener diode voltage regulator?",
+                            answers: ["Output voltage remains constant", "Output voltage varies", "Zener diode fails", "None of the above"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the primary application of a Zener diode in a surge protection circuit?",
+                            answers: ["To limit voltage spikes", "To amplify signals", "To rectify AC voltage", "To filter noise"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the relationship between Zener diode current and voltage?",
+                            answers: ["Directly proportional", "Inversely proportional", "Independent", "None of the above"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the main advantage of using a Zener diode over a linear voltage regulator?",
+                            answers: ["Lower cost", "Higher efficiency", "Simplicity", "All of the above"],
+                            correct: 3
+                        },
+
+                        {
+                            question: "What is the effect of temperature on the Zener breakdown voltage?",
+                            answers: ["It increases the breakdown voltage", "It decreases the breakdown voltage", "It has no effect", "It causes the diode to fail"],
+                            correct: 1
+                        },
+
+                        {
+                            question: "What is the primary function of a Zener diode in a voltage reference circuit?",
+                            answers: ["To provide a stable reference voltage", "To amplify signals", "To rectify AC voltage", "To filter noise"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the main disadvantage of using Zener diodes for voltage regulation?",
+                            answers: ["Limited current handling", "High cost", "Complexity", "Low efficiency"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the effect of using a Zener diode in a voltage regulator circuit?",
+                            answers: ["It stabilizes the output voltage", "It increases the output voltage", "It decreases the output voltage", "It has no effect"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the primary reason for using a Zener diode in a voltage reference circuit?",
+                            answers: ["To provide a stable reference voltage", "To amplify signals", "To rectify AC voltage", "To filter noise"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the relationship between Zener voltage and temperature coefficient?",
+                            answers: ["Higher Zener voltage means higher temperature coefficient", "Lower Zener voltage means lower temperature coefficient", "They are inversely related", "They are independent"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the main application of a Zener diode in a power supply circuit?",
+                            answers: ["Rectification", "Voltage regulation", "Signal amplification", "Filtering"],
+                            correct: 1
+                        },
+
+                        {
+                            question: "What is the effect of using a Zener diode in parallel with a load?",
+                            answers: ["It increases the load voltage", "It stabilizes the load voltage", "It decreases the load voltage", "It has no effect"],
+                            correct: 1
+                        }
+                    ],
+
+
+                    hard: [
+                        {
+                            question: "Which factor affects the breakdown voltage of a Zener diode?",
+                            answers: ["Doping level", "Temperature", "Material", "All of the above"],
+                            correct: 3
+                        },
+
+                        {
+                            question: "What is the maximum reverse voltage a Zener diode can handle called?",
+                            answers: ["Zener voltage", "Reverse breakdown voltage", "Peak inverse voltage", "Forward voltage"],
+                            correct: 2
+                        },
+
+                        {
+                            question: "What is the effect of series resistance on the performance of a Zener diode?",
+                            answers: ["Increases output voltage", "Decreases output voltage", "Stabilizes output voltage", "Has no effect"],
+                            correct: 1
+                        },
+
+                        {
+                            question: "What is the typical temperature coefficient for Zener diodes?",
+                            answers: ["Positive", "Negative", "Zero", "Variable"],
+                            correct: 1
+                        },
+
+                        {
+                            question: "What is the main purpose of a Zener diode in a clipping circuit?",
+                            answers: ["To limit voltage", "To amplify signals", "To rectify AC voltage", "To filter noise"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the effect of increasing the Zener diode's breakdown voltage?",
+                            answers: ["Increases current", "Decreases current", "No effect on current", "Increases power dissipation"],
+                            correct: 3
+                        },
+
+                        {
+                            question: "What is the primary reason for using a Zener diode in a voltage divider circuit?",
+                            answers: ["To provide a stable output voltage", "To increase voltage", "To decrease voltage", "To rectify AC voltage"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the main characteristic of a Zener diode in the reverse breakdown region?",
+                            answers: ["Constant current", "Constant voltage", "Variable current", "Variable voltage"],
+                            correct: 1
+                        },
+
+                        {
+                            question: "What is the effect of load changes on a Zener diode voltage regulator?",
+                            answers: ["Output voltage remains constant", "Output voltage varies", "Zener diode fails", "None of the above"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the primary application of a Zener diode in a surge protection circuit?",
+                            answers: ["To limit voltage spikes", "To amplify signals", "To rectify AC voltage", "To filter noise"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the relationship between Zener diode current and voltage?",
+                            answers: ["Directly proportional", "Inversely proportional", "Independent", "None of the above"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the main advantage of using a Zener diode over a linear voltage regulator?",
+                            answers: ["Lower cost", "Higher efficiency", "Simplicity", "All of the above"],
+                            correct: 3
+                        },
+
+                        {
+                            question: "What is the effect of temperature on the Zener breakdown voltage?",
+                            answers: ["It increases the breakdown voltage", "It decreases the breakdown voltage", "It has no effect", "It causes the diode to fail"],
+                            correct: 1
+                        },
+
+                        {
+                            question: "What is the primary function of a Zener diode in a voltage reference circuit?",
+                            answers: ["To provide a stable reference voltage", "To amplify signals", "To rectify AC voltage", "To filter noise"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the main disadvantage of using Zener diodes for voltage regulation?",
+                            answers: ["Limited current handling", "High cost", "Complexity", "Low efficiency"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the effect of using a Zener diode in a voltage regulator circuit?",
+                            answers: ["It stabilizes the output voltage", "It increases the output voltage", "It decreases the output voltage", "It has no effect"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the primary reason for using a Zener diode in a voltage reference circuit?",
+                            answers: ["To provide a stable reference voltage", "To amplify signals", "To rectify AC voltage", "To filter noise"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the relationship between Zener voltage and temperature coefficient?",
+                            answers: ["Higher Zener voltage means higher temperature coefficient", "Lower Zener voltage means lower temperature coefficient", "They are inversely related", "They are independent"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the main application of a Zener diode in a power supply circuit?",
+                            answers: ["Rectification", "Voltage regulation", "Signal amplification", "Filtering"],
+                            correct: 1
+                        },
+
+                        {
+                            question: "What is the effect of using a Zener diode in parallel with a load?",
+                            answers: ["It increases the load voltage", "It stabilizes the load voltage", "It decreases the load voltage", "It has no effect"],
+                            correct: 1
+                        },
+
+                        {
+                            question: "What is the primary reason for using a Zener diode in a voltage reference circuit?",
+                            answers: ["To provide a stable reference voltage", "To amplify signals", "To rectify AC voltage", "To filter noise"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the relationship between Zener voltage and temperature coefficient?",
+                            answers: ["Higher Zener voltage means higher temperature coefficient", "Lower Zener voltage means lower temperature coefficient", "They are inversely related", "They are independent"],
+                            correct: 0
+                        },
+
+                        {
+                            question: "What is the main application of a Zener diode in a power supply circuit?",
+                            answers: ["Rectification", "Voltage regulation", "Signal amplification", "Filtering"],
+                            correct: 1
+                        },
+
+                        {
+                            question: "What is the effect of using a Zener diode in parallel with a load?",
+                            answers: ["It increases the load voltage", "It stabilizes the load voltage", "It decreases the load voltage", "It has no effect"],
+                            correct: 1
+                        }
+                    ]
+                }
+            };
+
+            return questions[category][difficulty].sort(() => Math.random() - 0.5);
+        }
+
+        function resetState() {
+            while (answerButtons.firstChild) {
+                answerButtons.removeChild(answerButtons.firstChild);
+            }
+        }
+
+        function setNextQuestion() {
+            resetState();
+            if (currentQuestionIndex < shuffledQuestions.length) {
+                showQuestion(shuffledQuestions[currentQuestionIndex]);
+            } else {
+                endQuiz();
+            }
+        }
+
+        function showQuestion(questionObj) {
+            questionText.textContent = questionObj.question;
+            questionObj.answers.forEach((answer, index) => {
+                const button = document.createElement("button");
+                button.textContent = answer;
+                button.addEventListener("click", () => selectAnswer(index, questionObj.correct));
+                answerButtons.appendChild(button);
+            });
+            startTimer();
+        }
+
+        function selectAnswer(selected, correct) {
+            clearInterval(timerInterval);
+            if (selected === correct) {
+                score++;
+            }
+            currentQuestionIndex++;
+            setNextQuestion();
+        }
+
+        function startTimer() {
+            timeLeft = 10;
+            timerDisplay.textContent = timeLeft;
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerDisplay.textContent = timeLeft;
+                if (timeLeft === 0) {
+                    clearInterval(timerInterval);
+                    currentQuestionIndex++;
+                    setNextQuestion();
+                }
+            }, 1000);
+        }
+
+        function endQuiz() {
+            questionContainer.classList.add("hide");
+            resultContainer.classList.remove("hide");
+            resultContainer.textContent = `Quiz Over! Your Score: ${score}/${shuffledQuestions.length}`;
+        }
+    </script>
+</body>
+
+</html>

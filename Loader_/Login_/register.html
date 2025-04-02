@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+  <link rel="stylesheet" href="register.css" />
+  <title>Login Page</title>
+  <link rel="icon" href="../../zner_img/Picture_16.webp" loading="lazy">
+</head>
+
+<body>
+  <div class="container" id="container">
+    <div class="form-container sign-up">
+      <form id="signup-form">
+        <h1>Create Account</h1>
+
+        <input type="text" id="signup-name" placeholder="Name" required />
+        <input type="email" id="signup-email" placeholder="Email" required />
+        <input type="password" id="signup-password" placeholder="Password" required />
+        <button type="submit" id="submit">Sign Up</button>
+
+        <!-- <span>Or Register With Google</span> -->
+        <div class="social-icons">
+          <!-- <a href="#" id="google-signup" class="icon"> -->
+          <!-- <i class="fa-brands fa-google"></i> -->
+          </a>
+        </div>
+
+      </form>
+    </div>
+
+    <div class="form-container sign-in">
+      <form id="login-form">
+        <h1>Sign In</h1>
+
+        <input type="email" id="login-email" placeholder="Email" required />
+        <input type="password" id="login-password" placeholder="Password" required />
+
+        <a href="#" id="reset">Forgot Your Password?</a>
+
+        <button type="submit" id="submit1">Sign In</button>
+
+        <!-- <span>Or Login With Google</span> -->
+        <div class="social-icons">
+          <!-- <a href="#" id="google-login" class="icon"> -->
+          <!-- <i class="fa-brands fa-google"></i> -->
+          </a>
+        </div>
+
+      </form>
+    </div>
+
+    <div class="toggle-container">
+      <div class="toggle">
+        <div class="toggle-panel toggle-left">
+          <h1>Welcome Back!</h1>
+          <p>Already have an account?</p>
+          <button class="hidden" id="login">Sign In</button>
+        </div>
+        <div class="toggle-panel toggle-right">
+          <h1>Hello, Welcome!</h1>
+          <p>Don't have an account?</p>
+          <button class="hidden" id="register">Sign Up</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const container = document.getElementById("container");
+    const registerBtn = document.getElementById("register");
+    const loginBtn = document.getElementById("login");
+
+    registerBtn.addEventListener("click", () => {
+      container.classList.add("active");
+    });
+
+    loginBtn.addEventListener("click", () => {
+      container.classList.remove("active");
+    });
+  </script>
+
+  <script type="module" src="register.js" defer></script>
+  <script type="module" src="login.js" defer></script>
+  <script type="module" src="reset.js" defer></script>
+</body>
+
+</html>

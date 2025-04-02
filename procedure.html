@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="android-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="icon" href="zner_img/Picture_16.webp">
+  <title>Zener Diode Simulation</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preload" as="image" href="zner_img/Picture_20.webp">
+
+  <!-- Google Tag -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-BLQTLTQV5S"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-BLQTLTQV5S');
+  </script>
+
+</head>
+
+<body>
+  <header>
+    <!-- <h1 class="typed-out">Zener Diode! </h1> -->
+    <a href="index.html"><img src="Team_/Logo_.webp" alt="Logo" id="logo"></a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="theory.html">Theory</a>
+      <a href="procedure.html" class="active">Procedure</a>
+      <a href="simulation.html">Simulation</a>
+      <a href="about.html">About</a>
+    </nav>
+
+    <button id="menu-toggle">☰</button>
+    <div id="mobile-menu">
+      <a href="index.html">Home</a>
+      <a href="theory.html">Theory</a>
+      <a href="procedure.html">Procedure</a>
+      <a href="simulation.html">Simulation</a>
+      <a href="about.html">About</a>
+      <a href="Loader_/Login_/register.html">Login</a>
+      <a href="Loader_/Dashboard_/dashboard.html">Dashboard</a>
+    </div>
+
+    <!-- <a href="Loader_/Login_/register.html">
+      <button class="sign-in-btn">
+        <svg width="37" height="37" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="white"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        
+          <circle cx="10" cy="8" r="4" stroke="white" stroke-width="2" />
+          <path d="M4 20c0-4 3-7 6-7s6 3 6 7" stroke="white" stroke-width="2" />
+        </svg>
+      </button>
+    </a> -->
+
+  </header>
+
+
+  <!-- Cursor Animation
+<svg xmlns="http://www.w3.org/2000/svg" class="goo" version="1.1" width="100%">
+  <defs>
+    <filter id="goo">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur"></feGaussianBlur>
+      <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 35 -15" result="goo"></feColorMatrix>
+      <feComposite in="SourceGraphic" in2="goo" operator="atop"></feComposite>
+    </filter>
+  </defs>
+</svg>
+
+<div id="cursor"></div> -->
+
+  <section class="procedure-intro">
+    <div class="container">
+      <h1>Procedure</h1>
+      <p>Follow the steps below to understand and perform the Zener Diode Simulation effectively.</p>
+    </div>
+  </section>
+
+  <section class="procedure-steps">
+    <div class="container">
+      <h2>Procedure to Use the Zener Diode Circuit Simulation</h2>
+
+      <h3>Step 1 - Circuit To Be Constructed:</h3>
+      <img src="zner_img/Picture_21.webp">
+
+      <h3>Step 2 - Constructing the Circuit:</h3>
+      <ul>
+        <li>Begin by navigating to the drag-and-drop canvas, which allows you to build your circuit.</li>
+        <li>The canvas is equipped with a set of components available in the form of buttons. These components include
+          resistors, load resistors, Zener diodes, voltage sources, and wires.</li>
+        <li>To add a component to the canvas, simply click on the desired button. The component will appear on the
+          canvas, where you can place and arrange it as required to create your circuit.</li>
+        <li>Use the wires to connect the components by dragging and dropping them between the component terminals.</li>
+      </ul>
+
+      <!-- <h3>Step 3 - Reference Circuit:</h3>
+      <img src="zner_img/Picture_11.webp" loading="lazy"> -->
+
+      <h3>Step 3 - Input Section:</h3>
+      <ul>
+        <li>Once your circuit is set up, move to the Input Section located below the canvas.</li>
+        <li>Here, you can enter the required values for the components in your circuit:</li>
+        <ul>
+          <li><b>Input Voltage:</b> The voltage value applied to the circuit.</li>
+          <li><b>Resistor Value:</b> The value of the resistor in the circuit.</li>
+          <li><b>Load Resistor Value:</b> The value of the load resistor.</li>
+          <li><b>Zener Diode Value:</b> The value of Zener Diode to be used for Simulation.</li>
+        </ul>
+        <li>After entering the necessary values, click on the Calculate button to perform the calculations based on the
+          entered values.</li>
+      </ul>
+
+      <h3>Step 4 - Result Section:</h3>
+      <ul>
+        <li>Upon clicking Calculate, the results will be displayed in the Result Section on the right side.</li>
+        <li>The results will include important calculations such as Zener Voltage, Zener Current, Load Voltage, and Load
+          Current.</li>
+        <li>These results will provide key insights into the behavior of the Zener Diode circuit based on your input
+          values.</li>
+      </ul>
+
+      <h3>Step 5 - Observation Table:</h3>
+      <ul>
+        <li>Below the result section, you’ll find the Observation Table. This table allows you to keep track of multiple
+          experiments by adding different sets of input values and their corresponding results.</li>
+        <li>To add the current results to the table, simply click the Add to Table button located in the result section.
+        </li>
+        <li>The results will be added to the table, where you can see the relationship between different values and the
+          outcomes of each experiment.</li>
+      </ul>
+
+      <h3>Step 6 - Graph Section:</h3>
+      <ul>
+        <li>After you have accumulated several sets of data in the observation table, you can visualize the results by
+          plotting them on a graph.</li>
+        <li>Click on the Plot Graph button, and a graph will be generated in the Graph Section to help you analyze
+          trends and relationships between the variables, such as Zener Voltage vs. Zener Current.</li>
+      </ul>
+
+      <h3>Simulation Tutorial:</h3>
+      <br>
+      <div class="video-container">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/VYTMWNntCx0" title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen>
+        </iframe>
+      </div>
+
+      <p>By following these steps, users can construct a circuit, perform calculations, track observations, and
+        visualize data, making this simulation an effective tool for understanding Zener Diode circuits.</p>
+    </div>
+  </section>
+
+
+  <!---Footer--->
+  <div>
+    <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+      viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+      <defs>
+        <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+      </defs>
+      <g class="parallax">
+        <use xlink:href="#gentle-wave" x="48" y="0" fill="#121212" />
+        <use xlink:href="#gentle-wave" x="48" y="3" fill="#1e1e1e" />
+        <use xlink:href="#gentle-wave" x="48" y="5" fill="#2a2a2a" />
+        <use xlink:href="#gentle-wave" x="48" y="7" fill="#000000" />
+      </g>
+    </svg>
+  </div>
+
+  <footer class="footer-content">
+    <h4>&copy; 2025 Zener Diode Simulation | All Rights Reserved</h4>
+    <h4>Developed by Quantum Squad</h4>
+    <h4> <a href="https://pvppcoe.ac.in/" target="_blank"> VPPCOE & VA </a> </h4>
+  </footer>
+  </div>
+
+  </div>
+
+  <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+  <df-messenger intent="WELCOME" chat-title="ZenerBot" agent-id="833e6aa5-19a2-4679-a363-5fae299d2133"
+    language-code="en"></df-messenger>
+
+  <script src="Loader_/Preloader_/script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Recall Challenge</title>
+    <style>
+        /* General styling */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #0d0d0d;
+            color: #e0e0e0;
+            text-align: center;
+            min-height: 100vh;
+        }
+
+        /* Layout containers */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        /* Header Styling */
+        h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            color: #d1d1d1;
+            margin-top: 40px;
+            opacity: 0;
+            animation: fadeIn 1.5s ease-in-out forwards;
+        }
+
+        /* Header Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Game sections */
+        #game-selection,
+        #level-selection,
+        #game-container,
+        #snippet-game {
+            display: none;
+            margin: 30px auto 0;
+            width: 100%;
+            max-width: 800px;
+
+        }
+
+        .game-container,
+        .snippet-game {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        .game-container p,
+        .snippet-game p {
+            display: block;
+            max-width: 70%;
+            margin: 0 auto 40px;
+        }
+
+        /* Styled buttons */
+        button {
+            background: #1e1e1e;
+            border: 1px solid #333;
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #f0f0f0;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+
+        button:hover {
+            background: #292929;
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        /* Button container */
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        /* Grid styles */
+        #grid-container {
+            display: grid;
+            gap: 5px;
+            margin: 30px auto;
+            width: fit-content;
+            max-width: 100%;
+        }
+
+        /* Block styles */
+        .block {
+            display: inline-block;
+            border: 1px solid #444;
+            background: #1a1a1a;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .easy .block {
+            width: 70px;
+            height: 70px;
+        }
+
+        .medium .block {
+            width: 60px;
+            height: 60px;
+        }
+
+        .hard .block {
+            width: 50px;
+            height: 50px;
+        }
+
+        /* Block states */
+        .colored {
+            background: #86da07;
+            box-shadow: 0 2px 6px rgba(72, 99, 252, 0.3);
+        }
+
+        .selected {
+            background: #5adb43;
+            box-shadow: 0 3px 8px rgba(55, 71, 133, 0.6);
+        }
+
+        .incorrect {
+            background: #802020;
+            box-shadow: 0 3px 8px rgba(255, 50, 50, 0.4);
+        }
+
+        /* Message styling */
+        #message,
+        #snippet-message {
+            margin: 40px auto 0 !important;
+            font-size: 1.125rem;
+            font-weight: 600;
+            padding: 12px 20px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            background: #222;
+            max-width: 80%;
+        }
+
+        /* Code Snippet Section */
+        #snippet-display {
+            background: #121212;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #39ff14;
+            width: 90%;
+            max-width: 700px;
+            margin: 20px auto;
+            box-shadow: 0 4px 12px rgba(0, 238, 255, 0.15);
+            text-align: left;
+            overflow-x: auto;
+            white-space: pre;
+            tab-size: 4;
+        }
+
+        /* Snippet Input */
+        #snippet-input {
+            margin: 20px auto 10px;
+            padding: 15px;
+            width: 90%;
+            max-width: 700px;
+            min-height: 120px;
+            font-size: 0.95rem;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            border-radius: 8px;
+            background: #111;
+            color: #39ff14;
+            border: 2px solid #00ffcc;
+            resize: vertical;
+            line-height: 1.5;
+        }
+
+        #snippet-input:focus {
+            outline: none;
+            border-color: #ffdd57;
+            box-shadow: 0 0 0 2px rgba(255, 221, 87, 0.2);
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            .button-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            button {
+                width: 100%;
+                max-width: 300px;
+                margin: 8px 0;
+            }
+
+            .easy .block,
+            .medium .block,
+            .hard .block {
+                width: 50px;
+                height: 50px;
+            }
+
+            #snippet-display,
+            #snippet-input {
+                width: 95%;
+                font-size: 0.875rem;
+            }
+
+            .game-container p,
+            .snippet-game p {
+                max-width: 90%;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+
+            .easy .block,
+            .medium .block,
+            .hard .block {
+                width: 40px;
+                height: 40px;
+            }
+
+            #message,
+            #snippet-message {
+                font-size: 1rem;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Recall-Rush</h1>
+
+    <div id="game-selection">
+        <button id="snippet-game-button">Code Snippet</button>
+        <button id="block-game-button">Block Game</button>
+    </div>
+
+    <div id="level-selection">
+        <button class="level-button" data-level="easy">Easy</button>
+        <button class="level-button" data-level="medium">Medium</button>
+        <button class="level-button" data-level="hard">Hard</button>
+
+
+    </div>
+
+    <div id="game-container">
+        <h2>Block Blink – Watch, Remember, Click!</h2>
+        <p>A set of blocks will briefly light up in one color before fading away. Your challenge? Remember which blocks
+            were highlighted and click on them correctly! No time pressure—just focus, recall, and test your memory
+            accuracy. How many can you get right?</p>
+        <div id="grid-container"></div>
+        <p id="message"></p>
+        <div class="button-container">
+            <button id="retry-button">Retry</button>
+            <button id="back-button">Back</button>
+        </div>
+
+    </div>
+
+    <div id="snippet-game">
+        <h2>Code Recall</h2>
+        <p>A code snippet will appear briefly on the screen, then vanish! Your challenge? Type the exact snippet from
+            memory as fast as you can. Sharpen your recall skills, improve coding accuracy, and race against time. Think
+            fast, type faster!</p>
+        <pre id="snippet-display"></pre>
+        <textarea id="snippet-input" placeholder="Type the code here" disabled></textarea>
+        <p id="snippet-message"></p>
+        <div class="button-container">
+            <button id="retry-snippet-button">Retry</button>
+            <button id="back-button">Back</button>
+        </div>
+
+    </div>
+
+
+    <script>
+        let level = "easy", gameActive = true;
+        let correctSequence = [], selectedSequence = [], selectionEnabled = false;
+        let snippetScore = 0, currentSnippetIndex = 0;
+        let blockScore = 0; // Track score for the Block Game
+
+        const gameSelection = document.getElementById("game-selection"),
+            snippetGameButton = document.getElementById("snippet-game-button"),
+            blockGameButton = document.getElementById("block-game-button"),
+            levelSelection = document.getElementById("level-selection"),
+            gameContainer = document.getElementById("game-container"),
+            snippetGame = document.getElementById("snippet-game"),
+            messageDisplay = document.getElementById("message"),
+            gridContainer = document.getElementById("grid-container"),
+            retryButton = document.getElementById("retry-button"),
+            snippetDisplay = document.getElementById("snippet-display"),
+            snippetInput = document.getElementById("snippet-input"),
+            snippetMessage = document.getElementById("snippet-message"),
+            retrySnippetButton = document.getElementById("retry-snippet-button");
+
+        // Snippets for each level
+        const snippets = {
+            easy: [
+                "console.log('Hello, World!');",
+                "let x = 5;",
+                "if (x > 0) { console.log('Positive'); }",
+                "for (let i = 0; i < 3; i++) { console.log(i); }",
+                "function add(a, b) { return a + b; }"
+            ],
+            medium: [
+                "const numbers = [1, 2, 3];",
+                "numbers.forEach(num => console.log(num));",
+                "let sum = numbers.reduce((a, b) => a + b, 0);",
+                "class Person { constructor(name) { this.name = name; } }",
+                "const greet = name => `Hello, ${name}`;"
+            ],
+            hard: [
+                "const fetchData = async () => { const response = await fetch('url'); const data = await response.json(); return data; };",
+                "const memoize = fn => { const cache = {}; return (...args) => { const key = JSON.stringify(args); return cache[key] || (cache[key] = fn(...args)); }; };",
+                "const debounce = (fn, delay) => { let timeout; return (...args) => { clearTimeout(timeout); timeout = setTimeout(() => fn(...args), delay); }; };",
+                "const flatten = arr => arr.reduce((acc, val) => Array.isArray(val) ? acc.concat(flatten(val)) : acc.concat(val), []);",
+                "const curry = fn => { const arity = fn.length; return function curried(...args) { return args.length >= arity ? fn(...args) : (...moreArgs) => curried(...args, ...moreArgs); }; };"
+            ]
+        };
+
+        // Function to shuffle an array
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Initial game selection
+        gameSelection.style.display = "block";
+        snippetGameButton.addEventListener("click", () => {
+            gameSelection.style.display = "none";
+            levelSelection.style.display = "block";
+            mode = "snippet";
+        });
+        blockGameButton.addEventListener("click", () => {
+            gameSelection.style.display = "none";
+            levelSelection.style.display = "block";
+            mode = "block";
+        });
+
+        // Level selection
+        const levelButtons = document.querySelectorAll(".level-button");
+        levelButtons.forEach(button => button.addEventListener("click", function () {
+            level = this.dataset.level;
+            levelSelection.style.display = "none";
+            if (mode === "block") {
+                gameContainer.style.display = "block";
+                startBlockGame();
+            } else if (mode === "snippet") {
+                snippetGame.style.display = "block";
+                startSnippetGame();
+            }
+        }));
+
+        // Block Game
+        function startBlockGame() {
+            gameActive = true;
+            blockScore = 0;
+            messageDisplay.textContent = "";
+            retryButton.style.display = "none";
+            nextBlockRound();
+        }
+
+        function nextBlockRound() {
+            if (!gameActive) return;
+            messageDisplay.textContent = "";
+            startBlockMemorization();
+        }
+
+        function startBlockMemorization() {
+            gridContainer.innerHTML = "";
+            gridContainer.style.display = "grid";
+            gridContainer.className = level;
+            selectionEnabled = false;
+
+            let gridSize = level === "easy" ? 5 : level === "medium" ? 6 : 7;
+            gridContainer.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+
+            let totalBlocks = gridSize * gridSize;
+            correctSequence = [...Array(totalBlocks).keys()].sort(() => Math.random() - 0.5).slice(0, Math.ceil(gridSize * 1.5));
+            selectedSequence = [];
+
+            let allBlocks = [];
+            for (let i = 0; i < totalBlocks; i++) {
+                let block = document.createElement("div");
+                block.classList.add("block");
+                block.dataset.index = i;
+                gridContainer.appendChild(block);
+                allBlocks.push(block);
+
+                block.addEventListener("click", () => {
+                    if (!gameActive || !selectionEnabled || selectedSequence.includes(i)) return;
+
+                    if (correctSequence.includes(i)) {
+                        block.classList.add("selected");
+                        selectedSequence.push(i);
+                        if (selectedSequence.length === correctSequence.length) {
+                            blockScore++;
+                            messageDisplay.textContent = `Correct! Next round starting...`;
+                            setTimeout(nextBlockRound, 2000);
+                        }
+                    } else {
+                        block.classList.add("incorrect");
+                        messageDisplay.innerHTML = `<span class="incorrect">Incorrect! Game Over.</span><br>Your final score: ${blockScore}`;
+                        gameActive = false;
+                        selectionEnabled = false;
+                        retryButton.style.display = "block";
+                    }
+                });
+            }
+
+            correctSequence.forEach((index, i) => {
+                setTimeout(() => allBlocks[index].classList.add("colored"), i * 500);
+            });
+
+            setTimeout(() => {
+                allBlocks.forEach(block => block.classList.remove("colored"));
+                selectionEnabled = true;
+            }, correctSequence.length * 500 + 1000);
+        }
+
+        retryButton.addEventListener("click", startBlockGame);
+
+        // Snippet Game
+        let shuffledSnippets = [];
+        function startSnippetGame() {
+            snippetScore = 0;
+            currentSnippetIndex = 0;
+            snippetMessage.textContent = "";
+            snippetInput.value = "";
+            snippetInput.disabled = true;
+            retrySnippetButton.style.display = "none";
+            shuffledSnippets = shuffleArray([...snippets[level]]);
+            loadSnippet();
+        }
+
+        function loadSnippet() {
+            snippetDisplay.textContent = shuffledSnippets[currentSnippetIndex];
+            snippetInput.value = "";
+            snippetInput.disabled = true;
+
+            setTimeout(() => {
+                snippetDisplay.textContent = "";
+                snippetInput.disabled = false;
+                snippetInput.focus();
+                snippetInput.addEventListener("keypress", checkSnippetOnEnter);
+            }, 5000);
+        }
+
+        function checkSnippetOnEnter(e) {
+            if (e.key === "Enter") {
+                if (snippetInput.value.trim() === shuffledSnippets[currentSnippetIndex]) {
+                    snippetScore++;
+                    snippetMessage.textContent = "Correct!";
+                    currentSnippetIndex++;
+                    if (currentSnippetIndex < shuffledSnippets.length) {
+                        setTimeout(() => {
+                            snippetMessage.textContent = "";
+                            loadSnippet();
+                        }, 1000);
+                    } else {
+                        snippetMessage.textContent = `Game Over! Your final score: ${snippetScore}`;
+                        retrySnippetButton.style.display = "block";
+                    }
+                } else {
+                    snippetMessage.innerHTML = `<span style="color: red;">Incorrect! Game Over.</span><br>Your final score: ${snippetScore}`;
+                    retrySnippetButton.style.display = "block";
+                }
+                snippetInput.disabled = true;
+                snippetInput.removeEventListener("keypress", checkSnippetOnEnter);
+            }
+        }
+
+        // Prevent copy-paste in the snippet input
+        snippetInput.addEventListener("paste", (e) => e.preventDefault());
+        snippetInput.addEventListener("copy", (e) => e.preventDefault());
+        snippetInput.addEventListener("cut", (e) => e.preventDefault());
+
+        retrySnippetButton.addEventListener("click", startSnippetGame);
+
+        // Back Button
+        document.querySelectorAll("#back-button").forEach(button => {
+            button.addEventListener("click", function () {
+                document.getElementById("game-container").style.display = "none";
+                document.getElementById("snippet-game").style.display = "none";
+                document.getElementById("level-selection").style.display = "none";
+                document.getElementById("game-selection").style.display = "block";
+            });
+        });
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debugging Dungeon</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #222;
+            color: #fff;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .game-container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background: #333;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            margin-top: 50px;
+        }
+
+        .code-area {
+            background: #111;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        pre {
+            background: black;
+            color: #0f0;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: left;
+            overflow-x: auto;
+        }
+
+        textarea {
+            width: 100%;
+            height: 80px;
+            margin-top: 10px;
+            font-family: 'Courier New', monospace;
+            background: #000;
+            color: #0f0;
+            border: 1px solid #0f0;
+            padding: 5px;
+        }
+
+        button {
+            background: green;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background: darkgreen;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="game-container">
+        <h1>🕵️ Debugging Dungeon 🏰</h1>
+        <div id="start-menu">
+            <label>Choose Difficulty:</label>
+            <select id="difficulty">
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+            </select>
+            <br><br>
+            <label>Choose Language:</label>
+            <select id="language">
+                <option value="js">JavaScript</option>
+                <option value="python">Python</option>
+                <option value="c">C</option>
+                <option value="cpp">C++</option>
+                <option value="java">Java</option>
+            </select>
+            <br><br>
+            <button onclick="startGame()">Start Game</button>
+        </div>
+
+        <div id="game" class="hidden">
+            <p id="story-text">You are trapped in a dungeon! Fix the bug to unlock the next door.</p>
+            <div class="code-area">
+                <pre id="code-snippet"></pre>
+                <textarea id="code-editor" placeholder="Fix the bug here..."></textarea>
+                <button onclick="checkCode()">Run Code</button>
+            </div>
+            <p id="result-message"></p>
+        </div>
+
+        <button id="play-again" class="hidden" onclick="restartGame()">Play Again</button>
+    </div>
+
+    <script>
+        const levels = {
+            easy: {
+                js: [
+                    { buggedCode: `let num = 10\nconsole.log(num);`, correctCode: `let num = 10; console.log(num);` },
+                    { buggedCode: `let arr = [1, 2, 3];\nconsole.log(arr[3]);`, correctCode: `let arr = [1, 2, 3];\nconsole.log(arr[2]);` },
+                    { buggedCode: `function greet(name) {\nconsole.log("Hello " + name)\n}\ngreet("Alice");`, correctCode: `function greet(name) {\nconsole.log("Hello " + name);\n}\ngreet("Alice");` },
+                    { buggedCode: `let obj = {name: "Alice", age: 25}\nconsole.log(obj.name)`, correctCode: `let obj = {name: "Alice", age: 25};\nconsole.log(obj.name);` },
+                    { buggedCode: `for(let i = 0; i < 5; i++) {\nconsole.log(i)\n}`, correctCode: `for(let i = 0; i < 5; i++) {\nconsole.log(i);\n}` },
+                    { buggedCode: `let x = 5\nif(x > 3) {\nconsole.log("x is greater than 3")\n}`, correctCode: `let x = 5;\nif(x > 3) {\nconsole.log("x is greater than 3");\n}` },
+                    { buggedCode: `let sum = (a, b) => a + b\nconsole.log(sum(5, 10))`, correctCode: `let sum = (a, b) => a + b;\nconsole.log(sum(5, 10));` },
+                    { buggedCode: `let str = "Hello World"\nconsole.log(str.length)`, correctCode: `let str = "Hello World";\nconsole.log(str.length);` },
+                    { buggedCode: `let arr = [1, 2, 3]\narr.push(4)\nconsole.log(arr)`, correctCode: `let arr = [1, 2, 3];\narr.push(4);\nconsole.log(arr);` },
+                    { buggedCode: `let x = 10\nlet y = 20\nconsole.log(x + y)`, correctCode: `let x = 10;\nlet y = 20;\nconsole.log(x + y);` },
+                    { buggedCode: `let isTrue = true\nif(isTrue) {\nconsole.log("It's true")\n}`, correctCode: `let isTrue = true;\nif(isTrue) {\nconsole.log("It's true");\n}` },
+                    { buggedCode: `let fruits = ["apple", "banana"]\nconsole.log(fruits[2])`, correctCode: `let fruits = ["apple", "banana"];\nconsole.log(fruits[1]);` },
+                    { buggedCode: `let x = 5\nlet y = 10\nlet result = x * y\nconsole.log(result)`, correctCode: `let x = 5;\nlet y = 10;\nlet result = x * y;\nconsole.log(result);` },
+                    { buggedCode: `let person = {name: "Bob", age: 30}\nconsole.log(person["name"])`, correctCode: `let person = {name: "Bob", age: 30};\nconsole.log(person["name"]);` },
+                    { buggedCode: `let count = 0\nwhile(count < 5) {\nconsole.log(count)\ncount++\n}`, correctCode: `let count = 0;\nwhile(count < 5) {\nconsole.log(count);\ncount++;\n}` },
+                    { buggedCode: `let x = 5\nlet y = "5"\nconsole.log(x == y)`, correctCode: `let x = 5;\nlet y = "5";\nconsole.log(x === y);` },
+                    { buggedCode: `let arr = [1, 2, 3]\narr[3] = 4\nconsole.log(arr)`, correctCode: `let arr = [1, 2, 3];\narr[2] = 4;\nconsole.log(arr);` },
+                    { buggedCode: `let x = 10\nlet y = 20\nconsole.log(x - y)`, correctCode: `let x = 10;\nlet y = 20;\nconsole.log(x - y);` },
+                    { buggedCode: `let name = "Alice"\nconsole.log("Hello " + name)`, correctCode: `let name = "Alice";\nconsole.log("Hello " + name);` },
+                    { buggedCode: `let arr = [1, 2, 3]\nconsole.log(arr.length)`, correctCode: `let arr = [1, 2, 3];\nconsole.log(arr.length);` },
+                    { buggedCode: `let x = 5\nif(x < 10) {\nconsole.log("x is less than 10")\n}`, correctCode: `let x = 5;\nif(x < 10) {\nconsole.log("x is less than 10");\n}` },
+                    { buggedCode: `let obj = {a: 1, b: 2}\nconsole.log(obj.a + obj.b)`, correctCode: `let obj = {a: 1, b: 2};\nconsole.log(obj.a + obj.b);` }
+                ],
+
+                python: [
+                    { buggedCode: `print(Hello World)`, correctCode: `print("Hello World")` },
+                    { buggedCode: `arr = [1, 2, 3]\nprint(arr[3])`, correctCode: `arr = [1, 2, 3]\nprint(arr[2])` },
+                    { buggedCode: `def greet(name):\nprint("Hello " + name)\ngreet("Alice")`, correctCode: `def greet(name):\n    print("Hello " + name)\ngreet("Alice")` },
+                    { buggedCode: `x = 5\nif x > 3:\nprint("x is greater than 3")`, correctCode: `x = 5\nif x > 3:\n    print("x is greater than 3")` },
+                    { buggedCode: `for i in range(5):\nprint(i)`, correctCode: `for i in range(5):\n    print(i)` },
+                    { buggedCode: `sum = lambda a, b: a + b\nprint(sum(5, 10))`, correctCode: `sum = lambda a, b: a + b\nprint(sum(5, 10))` },
+                    { buggedCode: `str = "Hello World"\nprint(len(str))`, correctCode: `str = "Hello World"\nprint(len(str))` },
+                    { buggedCode: `arr = [1, 2, 3]\narr.append(4)\nprint(arr)`, correctCode: `arr = [1, 2, 3]\narr.append(4)\nprint(arr)` },
+                    { buggedCode: `x = 10\ny = 20\nprint(x + y)`, correctCode: `x = 10\ny = 20\nprint(x + y)` },
+                    { buggedCode: `isTrue = True\nif isTrue:\nprint("It's true")`, correctCode: `isTrue = True\nif isTrue:\n    print("It's true")` },
+                    { buggedCode: `fruits = ["apple", "banana"]\nprint(fruits[2])`, correctCode: `fruits = ["apple", "banana"]\nprint(fruits[1])` },
+                    { buggedCode: `x = 5\ny = 10\nresult = x * y\nprint(result)`, correctCode: `x = 5\ny = 10\nresult = x * y\nprint(result)` },
+                    { buggedCode: `person = {"name": "Bob", "age": 30}\nprint(person["name"])`, correctCode: `person = {"name": "Bob", "age": 30}\nprint(person["name"])` },
+                    { buggedCode: `count = 0\nwhile count < 5:\nprint(count)\ncount += 1`, correctCode: `count = 0\nwhile count < 5:\n    print(count)\n    count += 1` },
+                    { buggedCode: `x = 5\ny = "5"\nprint(x == y)`, correctCode: `x = 5\ny = "5"\nprint(x == y)` },
+                    { buggedCode: `arr = [1, 2, 3]\narr[3] = 4\nprint(arr)`, correctCode: `arr = [1, 2, 3]\narr [2] = 4\nprint(arr)` },
+                    { buggedCode: `x = 10\ny = 20\nprint(x - y)`, correctCode: `x = 10\ny = 20\nprint(x - y)` },
+                    { buggedCode: `name = "Alice"\nprint("Hello " + name)`, correctCode: `name = "Alice"\nprint("Hello " + name)` },
+                    { buggedCode: `arr = [1, 2, 3]\nprint(len(arr))`, correctCode: `arr = [1, 2, 3]\nprint(len(arr))` },
+                    { buggedCode: `x = 5\nif x < 10:\nprint("x is less than 10")`, correctCode: `x = 5\nif x < 10:\n    print("x is less than 10")` },
+                    { buggedCode: `obj = {"a": 1, "b": 2}\nprint(obj["a"] + obj["b"])`, correctCode: `obj = {"a": 1, "b": 2}\nprint(obj["a"] + obj["b"])` }
+                ],
+
+                c: [
+                    { buggedCode: `int x = 5\nprintf("%d", x);`, correctCode: `int x = 5;\nprintf("%d", x);` },
+                    { buggedCode: `int arr[] = {1, 2, 3};\nprintf("%d", arr[3]);`, correctCode: `int arr[] = {1, 2, 3};\nprintf("%d", arr[2]);` },
+                    { buggedCode: `for(int i = 0; i < 5; i++) {\nprintf("%d", i)\n}`, correctCode: `for(int i = 0; i < 5; i++) {\nprintf("%d", i);\n}` },
+                    { buggedCode: `if(x > 3) {\nprintf("x is greater than 3")\n}`, correctCode: `if(x > 3) {\nprintf("x is greater than 3");\n}` },
+                    { buggedCode: `char str[] = "Hello World"\nprintf("%s", str)`, correctCode: `char str[] = "Hello World";\nprintf("%s", str);` },
+                    { buggedCode: `int sum(int a, int b) {\nreturn a + b\n}`, correctCode: `int sum(int a, int b) {\nreturn a + b;\n}` },
+                    { buggedCode: `int arr[3] = {1, 2, 3};\nprintf("%d", arr[3]);`, correctCode: `int arr[3] = {1, 2, 3};\nprintf("%d", arr[2]);` },
+                    { buggedCode: `while(count < 5) {\nprintf("%d", count)\ncount++\n}`, correctCode: `while(count < 5) {\nprintf("%d", count);\ncount++;\n}` },
+                    { buggedCode: `int x = 10, y = 20;\nprintf("%d", x + y)`, correctCode: `int x = 10, y = 20;\nprintf("%d", x + y);\n` },
+                    { buggedCode: `int x = 5;\nif(x < 10) {\nprintf("x is less than 10")\n}`, correctCode: `int x = 5;\nif(x < 10) {\nprintf("x is less than 10");\n}` },
+                    { buggedCode: `int x = 5;\nint y = "5";\nprintf("%d", x == y)`, correctCode: `int x = 5;\nint y = 5;\nprintf("%d", x == y);\n` },
+                    { buggedCode: `int arr[3] = {1, 2, 3};\narr[3] = 4;\nprintf("%d", arr[3]);`, correctCode: `int arr[3] = {1, 2, 3};\narr[2] = 4;\nprintf("%d", arr[2]);` },
+                    { buggedCode: `int x = 10;\nint y = 20;\nprintf("%d", x - y)`, correctCode: `int x = 10;\nint y = 20;\nprintf("%d", x - y);\n` },
+                    { buggedCode: `char name[] = "Alice";\nprintf("Hello %s", name)`, correctCode: `char name[] = "Alice";\nprintf("Hello %s", name);` },
+                    { buggedCode: `int count = 0;\nwhile(count < 5) {\nprintf("%d", count)\ncount++\n}`, correctCode: `int count = 0;\nwhile(count < 5) {\nprintf("%d", count);\ncount++;\n}` },
+                    { buggedCode: `int x = 5;\nint y = 10;\nprintf("%d", x + y)`, correctCode: `int x = 5;\nint y = 10;\nprintf("%d", x + y);\n` },
+                    { buggedCode: `int arr[3] = {1, 2, 3};\nprintf("%d", arr[2])`, correctCode: `int arr[3] = {1, 2, 3};\nprintf("%d", arr[1]);` },
+                    { buggedCode: `int x = 5;\nif(x == 5) {\nprintf("x is five")\n}`, correctCode: `int x = 5;\nif(x == 5) {\nprintf("x is five");\n}` },
+                    { buggedCode: `int a = 1, b = 2;\nprintf("%d", a + b)`, correctCode: `int a = 1, b = 2;\nprintf("%d", a + b);\n` }
+                ],
+
+                cpp: [
+                    { buggedCode: `int x = 5\nstd::cout << x;`, correctCode: `int x = 5;\nstd::cout << x;` },
+                    { buggedCode: `int arr[] = {1, 2, 3};\nstd::cout << arr[3];`, correctCode: `int arr[] = {1, 2, 3};\nstd::cout << arr[2];` },
+                    { buggedCode: `for(int i = 0; i < 5; i++) {\nstd::cout << i\n}`, correctCode: `for(int i = 0; i < 5; i++) {\nstd::cout << i;\n}` },
+                    { buggedCode: `if(x > 3) {\nstd::cout << "x is greater than 3"\n}`, correctCode: `if(x > 3) {\nstd::cout << "x is greater than 3";\n}` },
+                    { buggedCode: `std::string str = "Hello World"\nstd::cout << str`, correctCode: `std::string str = "Hello World";\nstd::cout << str;` },
+                    { buggedCode: `int sum(int a, int b) {\nreturn a + b\n}`, correctCode: `int sum(int a, int b) {\nreturn a + b;\n}` },
+                    { buggedCode: `int arr[3] = {1, 2, 3};\nstd::cout << arr[3];`, correctCode: `int arr[3] = {1, 2, 3};\nstd::cout << arr[2];` },
+                    { buggedCode: `while(count < 5) {\nstd::cout << count\ncount++\n}`, correctCode: `while(count < 5) {\nstd::cout << count;\ncount++;\n}` },
+                    { buggedCode: `int x = 10, y = 20;\nstd::cout << x + y`, correctCode: `int x = 10, y = 20;\nstd::cout << x + y;\n` },
+                    { buggedCode: `int x = 5;\nif(x < 10) {\nstd::cout << "x is less than 10"\n}`, correctCode: `int x = 5;\nif(x < 10) {\nstd::cout << "x is less than 10";\n}` },
+                    { buggedCode: `int x = 5;\nint y = "5";\nstd::cout << (x == y)`, correctCode: `int x = 5;\nint y = 5;\nstd::cout << (x == y);\n` },
+                    { buggedCode: `int arr[3] = {1, 2, 3};\narr[3] = 4;\nstd::cout << arr[3];`, correctCode: `int arr[3] = {1, 2, 3};\narr[2] = 4;\nstd::cout << arr[2];` },
+                    { buggedCode: `int x = 10;\nint y = 20;\nstd::cout << (x - y)`, correctCode: `int x = 10;\nint y = 20;\nstd::cout << (x - y);\n` },
+                    { buggedCode: `std::string name = "Alice";\nstd::cout << "Hello " << name`, correctCode: `std::string name = "Alice";\nstd::cout << "Hello " << name << std::endl;` },
+                    { buggedCode: `int count = 0;\nwhile(count < 5) {\nstd::cout << count\ncount++\n}`, correctCode: `int count = 0;\nwhile(count < 5) {\nstd::cout << count;\ncount++;\n}` },
+                    { buggedCode: `int x = 5;\nint y = 10;\nstd::cout << (x + y)`, correctCode: `int x = 5;\nint y = 10;\nstd::cout << (x + y) << std::endl;` },
+                    { buggedCode: `int arr[3] = {1, 2, 3};\nstd::cout << arr[2]`, correctCode: `int arr[3] = {1, 2, 3};\nstd::cout << arr[1] << std::endl;` },
+                    { buggedCode: `int x = 5;\nif(x == 5) {\nstd::cout << "x is five"\n}`, correctCode: `int x = 5;\nif(x == 5) {\nstd::cout << "x is five";\n}` }
+                ],
+
+                java: [
+                    { buggedCode: `int x = 5\nSystem.out.println(x);`, correctCode: `int x = 5;\nSystem.out.println(x);` },
+                    { buggedCode: `int[] arr = {1, 2, 3};\nSystem.out.println(arr[3]);`, correctCode: `int[] arr = {1, 2, 3};\nSystem.out.println(arr[2]);` },
+                    { buggedCode: `for(int i = 0; i < 5; i++) {\nSystem.out.println(i)\n}`, correctCode: `for(int i = 0; i < 5; i++) {\nSystem.out.println(i);\n}` },
+                    { buggedCode: `if(x > 3) {\nSystem.out.println("x is greater than 3")\n}`, correctCode: `if(x > 3) {\nSystem.out.println("x is greater than 3");\n}` },
+                    { buggedCode: `String str = "Hello World"\nSystem.out.println(str)`, correctCode: `String str = "Hello World";\nSystem.out.println(str);` },
+                    { buggedCode: `int sum(int a, int b) {\nreturn a + b\n}`, correctCode: `int sum(int a, int b) {\nreturn a + b;\n}` },
+                    { buggedCode: `int[] arr = {1, 2, 3};\nSystem.out.println(arr[3]);`, correctCode: `int[] arr = {1, 2, 3};\nSystem.out.println(arr[2]);` },
+                    { buggedCode: `while(count < 5) {\nSystem.out.println(count)\ncount++\n}`, correctCode: `while(count < 5) {\nSystem.out.println(count);\ncount++;\n}` },
+                    { buggedCode: `int x = 10, y = 20;\nSystem.out.println(x + y)`, correctCode: `int x = 10, y = 20;\nSystem.out.println(x + y);` },
+                    { buggedCode: `int x = 5;\nif(x < 10) {\nSystem.out.println("x is less than 10")\n}`, correctCode: `int x = 5;\nif(x < 10) {\nSystem.out.println("x is less than 10");\n}` },
+                    { buggedCode: `int x = 5;\nint y = "5";\nSystem.out.println(x == y)`, correctCode: `int x = 5;\nint y = 5;\nSystem.out.println(x == y);` },
+                    { buggedCode: `int[] arr = {1, 2, 3};\narr[3] = 4;\nSystem.out.println(arr[3]);`, correctCode: `int[] arr = {1, 2, 3};\narr[2] = 4;\nSystem.out.println(arr[2]);` },
+                    { buggedCode: `int x = 10;\nint y = 20;\nSystem.out.println(x - y)`, correctCode: `int x = 10;\nint y = 20;\nSystem.out.println(x - y);` },
+                    { buggedCode: `String name = "Alice";\nSystem.out.println("Hello " + name)`, correctCode: `String name = "Alice";\nSystem.out.println("Hello " + name);` },
+                    { buggedCode: `int count = 0;\nwhile(count < 5) {\nSystem.out.println(count)\ncount++\n}`, correctCode: `int count = 0;\nwhile(count < 5) {\nSystem.out.println(count);\ncount++;\n}` },
+                    { buggedCode: `int x = 5;\nint y = 10;\nSystem.out.println(x + y)`, correctCode: `int x = 5;\nint y = 10;\nSystem.out.println(x + y);` },
+                    { buggedCode: `int[] arr = {1, 2, 3};\nSystem.out.println(arr[2])`, correctCode: `int[] arr = {1, 2, 3};\nSystem.out.println(arr[1]);` },
+                    { buggedCode: `int x = 5;\nif(x == 5) {\nSystem.out.println("x is five")\n}`, correctCode: `int x = 5;\nif(x == 5) {\nSystem.out.println("x is five");\n}` }
+                ]
+            },
+
+
+            medium: {
+                js: [
+                    { buggedCode: `function add(a, b) { return a + b; }\nconsole.log(add(3));`, correctCode: `function add(a, b) { return a + b; }\nconsole.log(add(3, 5));` },
+                    { buggedCode: `let obj = { key: "value" };\nconsole.log(obj["nonexistent_key"]);`, correctCode: `let obj = { key: "value" };\nconsole.log(obj["key"]);` },
+                    { buggedCode: `let arr = [1, 2, 3];\nconsole.log(arr[3]);`, correctCode: `let arr = [1, 2, 3];\nconsole.log(arr[2]);` },
+                    { buggedCode: `function multiply(a, b) {\nreturn a * b\n}\nconsole.log(multiply(2, 3));`, correctCode: `function multiply(a, b) {\nreturn a * b;\n}\nconsole.log(multiply(2, 3));` },
+                    { buggedCode: `let str = "Hello"\nconsole.log(str.toUpperCase)`, correctCode: `let str = "Hello";\nconsole.log(str.toUpperCase());` },
+                    { buggedCode: `let x = 10;\nif (x = 5) {\nconsole.log("x is 5");\n}`, correctCode: `let x = 10;\nif (x === 5) {\nconsole.log("x is 5");\n}` },
+                    { buggedCode: `let obj = { a: 1, b: 2 };\nconsole.log(obj.c);`, correctCode: `let obj = { a: 1, b: 2 };\nconsole.log(obj.b);` },
+                    { buggedCode: `let arr = [1, 2, 3];\narr[3] = 4;\nconsole.log(arr);`, correctCode: `let arr = [1, 2, 3];\narr[2] = 4;\nconsole.log(arr);` },
+                    { buggedCode: `function greet(name) {\nreturn "Hello " + name\n}\nconsole.log(greet("Alice"));`, correctCode: `function greet(name) {\nreturn "Hello " + name;\n}\nconsole.log(greet("Alice"));` },
+                    { buggedCode: `let num = "5"\nconsole.log(num + 5);`, correctCode: `let num = 5;\nconsole.log(num + 5);` },
+                    { buggedCode: `let arr = [1, 2, 3];\nconsole.log(arr.length + 1);`, correctCode: `let arr = [1, 2, 3];\nconsole.log(arr.length);` },
+                    { buggedCode: `let x = 5;\nlet y = "5";\nconsole.log(x == y);`, correctCode: `let x = 5;\nlet y = "5";\nconsole.log(x === y);` },
+                    { buggedCode: `let obj = { a: 1, b: 2 };\nconsole.log(obj["a" + "b"]);`, correctCode: `let obj = { a: 1, b: 2 };\nconsole.log(obj.a + obj.b);` },
+                    { buggedCode: `let x = 5;\nif (x > 3) {\nconsole.log("x is greater than 3")\n}`, correctCode: `let x = 5;\nif (x > 3) {\nconsole.log("x is greater than 3");\n}` },
+                    { buggedCode: `let arr = [1, 2, 3];\narr.push(4);\nconsole.log(arr[4]);`, correctCode: `let arr = [1, 2, 3];\narr.push(4);\nconsole.log(arr[3]);` },
+                    { buggedCode: `let str = "Hello"\nconsole.log(str.substring(0, 5))`, correctCode: `let str = "Hello";\nconsole.log(str.substring(0, 5));` },
+                    { buggedCode: `let x = 5;\nlet y = 10;\nconsole.log(x + y);`, correctCode: `let x = 5;\nlet y = 10;\nconsole.log(x + y);` },
+                    { buggedCode: `let obj = { a: 1, b: 2 };\nconsole.log(obj.a + obj.b + obj.c);`, correctCode: `let obj = { a: 1, b: 2 };\nconsole.log(obj.a + obj.b);` },
+                    { buggedCode: `let x = 5;\nif (x < 10) {\nconsole.log("x is less than 10")\n}`, correctCode: `let x = 5;\nif (x < 10) {\nconsole.log("x is less than 10");\n}` },
+                    { buggedCode: `let arr = [1, 2, 3];\narr[3] = 4;\nconsole.log(arr[3]);`, correctCode: `let arr = [1, 2, 3];\narr[2] = 4;\nconsole.log(arr[2]);` },
+                    { buggedCode: `let x = 5;\nif (x == 5) {\nconsole.log("x is five")\n}`, correctCode: `let x = 5;\nif (x === 5) {\nconsole.log("x is five");\n}` },
+                    { buggedCode: `let str = "Hello"\nconsole.log(str.length + 1)`, correctCode: `let str = "Hello";\nconsole.log(str.length);` },
+                    { buggedCode: `let arr = [1, 2, 3];\narr[3] = 4;\nconsole.log(arr.length);`, correctCode: `let arr = [1, 2, 3];\narr[2] = 4;\nconsole.log(arr.length);` }
+                ],
+
+                python: [
+                    { buggedCode: `def add(a, b):\n    return a + b\nprint(add(3))`, correctCode: `def add(a, b):\n    return a + b\nprint(add(3, 5))` },
+                    { buggedCode: `obj = {"key": "value"}\nprint(obj["nonexistent_key"])`, correctCode: `obj = {"key": "value"}\nprint(obj["key"])` },
+                    { buggedCode: `def multiply(a, b):\n    return a * b\nprint(multiply(2))`, correctCode: `def multiply(a, b):\n    return a * b\nprint(multiply(2, 3))` },
+                    { buggedCode: `x = 5\nif x > 3:\nprint("x is greater than 3")`, correctCode: `x = 5\nif x > 3:\n    print("x is greater than 3")` },
+                    { buggedCode: `arr = [1, 2, 3]\nprint(arr[3])`, correctCode: `arr = [1, 2, 3]\nprint(arr[2])` },
+                    { buggedCode: `str = "Hello"\nprint(str.upper)`, correctCode: `str = "Hello"\nprint(str.upper())` },
+                    { buggedCode: `x = 10\ny = "10"\nprint(x == y)`, correctCode: `x = 10\ny = 10\nprint(x == y)` },
+                    { buggedCode: `def greet(name):\n    return "Hello " + name\nprint(greet("Alice"))`, correctCode: `def greet(name):\n    return "Hello " + name\nprint(greet("Alice"))` },
+                    { buggedCode: `x = 5\nif x < 10:\nprint("x is less than 10")`, correctCode: `x = 5\nif x < 10:\n    print("x is less than 10")` },
+                    { buggedCode: `arr = [1, 2, 3]\narr.append(4)\nprint(arr[4])`, correctCode: `arr = [1, 2, 3]\narr.append(4)\nprint(arr[3])` },
+                    { buggedCode: `x = 5\ny = 10\nprint(x + y)`, correctCode: `x = 5\ny = 10\nprint(x + y)` },
+                    { buggedCode: `x = 5\nif x == 5:\nprint("x is five")`, correctCode: `x = 5\nif x == 5:\n    print("x is five")` },
+                    { buggedCode: `arr = [1, 2, 3]\nprint(len(arr) + 1)`, correctCode: `arr = [1, 2, 3]\nprint(len(arr))` },
+                    { buggedCode: `x = 5\nif x > 3:\nprint("x is greater than 3")`, correctCode: `x = 5\nif x > 3:\n    print("x is greater than 3")` },
+                    { buggedCode: `x = 5\ny = "5"\nprint(x == y)`, correctCode: `x = 5\ny = 5\nprint(x == y)` },
+                    { buggedCode: `arr = [1, 2, 3]\narr[3] = 4\nprint(arr)`, correctCode: `arr = [1, 2, 3]\narr[2] = 4\nprint(arr)` },
+                    { buggedCode: `def subtract(a, b):\n    return a - b\nprint(subtract(5))`, correctCode: `def subtract(a, b):\n    return a - b\nprint(subtract(5, 2))` },
+                    { buggedCode: `x = 5\nif x == 5:\nprint("x is five")`, correctCode: `x = 5\nif x == 5:\n    print("x is five")` },
+                    { buggedCode: `arr = [1, 2, 3]\narr[3] = 4\nprint(arr[3])`, correctCode: `arr = [1, 2, 3]\narr[2] = 4\nprint(arr[2])` }
+                ],
+
+                c: [
+                    { buggedCode: `int add(int a, b) { return a + b; }`, correctCode: `int add(int a, int b) { return a + b; }` },
+                    { buggedCode: `struct Obj { char key[20]; };\nstruct Obj obj;\nprintf("%s", obj.key);`, correctCode: `struct Obj { char key[20]; };\nstruct Obj obj;\nstrcpy(obj.key, "value");\nprintf("%s", obj.key);` },
+                    { buggedCode: `int arr[3] = {1, 2, 3};\nprintf("%d", arr[3]);`, correctCode: `int arr[3] = {1, 2, 3};\nprintf("%d", arr[2]);` },
+                    { buggedCode: `int x = 5;\nif(x > 3) {\nprintf("x is greater than 3")\n}`, correctCode: `int x = 5;\nif(x > 3) {\nprintf("x is greater than 3");\n}` },
+                    { buggedCode: `int x = 10;\nint y = "10";\nprintf("%d", x == y)`, correctCode: `int x = 10;\nint y = 10;\nprintf("%d", x == y);\n` },
+                    { buggedCode: `int arr[3] = {1, 2, 3};\narr[3] = 4;\nprintf("%d", arr[3]);`, correctCode: `int arr[3] = {1, 2, 3};\narr[2] = 4;\nprintf("%d", arr[2]);` },
+                    { buggedCode: `int x = 5;\nif(x < 10) {\nprintf("x is less than 10")\n}`, correctCode: `int x = 5;\nif(x < 10) {\nprintf("x is less than 10");\n}` },
+                    { buggedCode: `int x = 5;\nint y = 10;\nprintf("%d", x + y)`, correctCode: `int x = 5;\nint y = 10;\nprintf("%d", x + y);\n` },
+                    { buggedCode: `int arr[3] = {1, 2, 3};\nprintf("%d", arr[2])`, correctCode: `int arr[3] = {1, 2, 3};\nprintf("%d", arr[1]);` },
+                    { buggedCode: `int count = 0;\nwhile(count < 5) {\nprintf("%d", count)\ncount++\n}`, correctCode: `int count = 0;\nwhile(count < 5) {\nprintf("%d", count);\ncount++;\n}` },
+                    { buggedCode: `int x = 5;\nif(x == 5) {\nprintf("x is five")\n}`, correctCode: `int x = 5 ;\nif(x == 5) {\nprintf("x is five");\n}` },
+                    { buggedCode: `int arr[3] = {1, 2, 3};\narr[3] = 4;\nprintf("%d", arr[3]);`, correctCode: `int arr[3] = {1, 2, 3};\narr[2] = 4;\nprintf("%d", arr[2]);` },
+                    { buggedCode: `int x = 5;\nif(x < 10) {\nprintf("x is less than 10")\n}`, correctCode: `int x = 5;\nif(x < 10) {\nprintf("x is less than 10");\n}` },
+                    { buggedCode: `int x = 5;\nint y = 10;\nprintf("%d", x + y)`, correctCode: `int x = 5;\nint y = 10;\nprintf("%d", x + y);\n` },
+                    { buggedCode: `int arr[3] = {1, 2, 3};\nprintf("%d", arr[2])`, correctCode: `int arr[3] = {1, 2, 3};\nprintf("%d", arr[1]);` },
+                    { buggedCode: `int count = 0;\nwhile(count < 5) {\nprintf("%d", count)\ncount++\n}`, correctCode: `int count = 0;\nwhile(count < 5) {\nprintf("%d", count);\ncount++;\n}` }
+                ],
+
+                cpp: [
+                    { buggedCode: `int add(int a, b) { return a + b; }`, correctCode: `int add(int a, int b) { return a + b; }` },
+                    { buggedCode: `struct Obj { std::string key; };\nObj obj;\nstd::cout << obj.key;`, correctCode: `struct Obj { std::string key; };\nObj obj;\nobj.key = "value";\nstd::cout << obj.key;` },
+                    { buggedCode: `int arr[3] = {1, 2, 3};\nstd::cout << arr[3];`, correctCode: `int arr[3] = {1, 2, 3};\nstd::cout << arr[2];` },
+                    { buggedCode: `int x = 5;\nif(x > 3) {\nstd::cout << "x is greater than 3"\n}`, correctCode: `int x = 5;\nif(x > 3) {\nstd::cout << "x is greater than 3";\n}` },
+                    { buggedCode: `std::string str = "Hello"\nstd::cout << str`, correctCode: `std::string str = "Hello";\nstd::cout << str;` },
+                    { buggedCode: `int x = 10;\nint y = "10";\nstd::cout << (x == y)`, correctCode: `int x = 10;\nint y = 10;\nstd::cout << (x == y);\n` },
+                    { buggedCode: `int arr[3] = {1, 2, 3};\narr[3] = 4;\nstd::cout << arr[3];`, correctCode: `int arr[3] = {1, 2, 3};\narr[2] = 4;\nstd::cout << arr[2];` },
+                    { buggedCode: `int x = 5;\nif(x < 10) {\nstd::cout << "x is less than 10"\n}`, correctCode: `int x = 5;\nif(x < 10) {\nstd::cout << "x is less than 10";\n}` },
+                    { buggedCode: `int x = 5;\nint y = 10;\nstd::cout << (x + y)`, correctCode: `int x = 5;\nint y = 10;\nstd::cout << (x + y) << std::endl;` },
+                    { buggedCode: `int arr[3] = {1, 2, 3};\nstd::cout << arr[2]`, correctCode: `int arr[3] = {1, 2, 3};\nstd::cout << arr[1] << std::endl;` },
+                    { buggedCode: `int x = 5;\nif(x == 5) {\nprintf("x is five")\n}`, correctCode: `int x = 5;\nif(x == 5) {\nprintf("x is five");\n}` },
+                    { buggedCode: `int arr[3] = {1, 2, 3};\narr[3] = 4;\nstd::cout << arr[3];`, correctCode: `int arr[3] = {1, 2, 3};\narr[2] = 4;\nstd::cout << arr[2];` },
+                    { buggedCode: `int count = 0;\nwhile(count < 5) {\nstd::cout << count;\ncount++\n}`, correctCode: `int count = 0;\nwhile(count < 5) {\nstd::cout << count;\ncount++;\n}` },
+                    { buggedCode: `int x = 5;\nif(x < 10) {\nstd::cout << "x is less than 10"\n}`, correctCode: `int x = 5;\nif(x < 10) {\nstd::cout << "x is less than 10";\n}` },
+                    { buggedCode: `int x = 5;\nint y = 10;\nstd::cout << (x + y)`, correctCode: `int x = 5;\nint y = 10;\nstd::cout << (x + y) << std::endl;` },
+                    { buggedCode: `int arr[3] = {1, 2, 3};\nstd::cout << arr[2]`, correctCode: `int arr[3] = {1, 2, 3};\nstd::cout << arr[1] << std::endl;` }
+                ],
+
+                java: [
+                    { buggedCode: `int add(int a, b) { return a + b; }`, correctCode: `int add(int a, int b) { return a + b; }` },
+                    { buggedCode: `class Obj { String key; }\nObj obj = new Obj();\nSystem.out.println(obj.key);`, correctCode: `class Obj { String key; }\nObj obj = new Obj();\nobj.key = "value";\nSystem.out.println(obj.key);` },
+                    { buggedCode: `int[] arr = {1, 2, 3};\nSystem.out.println(arr[3]);`, correctCode: `int[] arr = {1, 2, 3};\nSystem.out.println(arr[2]);` },
+                    { buggedCode: `int x = 5;\nif(x > 3) {\nSystem.out.println("x is greater than 3")\n}`, correctCode: `int x = 5;\nif(x > 3) {\nSystem.out.println("x is greater than 3");\n}` },
+                    { buggedCode: `String str = "Hello"\nSystem.out.println(str)`, correctCode: `String str = "Hello";\nSystem.out.println(str);` },
+                    { buggedCode: `int x = 10;\nint y = "10";\nSystem.out.println(x == y)`, correctCode: `int x = 10;\nint y = 10;\nSystem.out.println(x == y);` },
+                    { buggedCode: `int[] arr = {1, 2, 3};\narr[3] = 4;\nSystem.out.println(arr[3]);`, correctCode: `int[] arr = {1, 2, 3};\narr[2] = 4;\nSystem.out.println(arr[2]);` },
+                    { buggedCode: `int x = 5;\nif(x < 10) {\nSystem.out.println("x is less than 10")\n}`, correctCode: `int x = 5;\nif(x < 10) {\nSystem.out.println("x is less than 10");\n}` },
+                    { buggedCode: `int x = 5;\nint y = 10;\nSystem.out.println(x + y)`, correctCode: `int x = 5;\nint y = 10;\nSystem.out.println(x + y);` },
+                    { buggedCode: `int[] arr = {1, 2, 3};\nSystem.out.println(arr[2])`, correctCode: `int[] arr = {1, 2, 3};\nSystem.out.println(arr[1]);` },
+                    { buggedCode: `int x = 5;\nif(x == 5) {\nSystem.out.println("x is five")\n}`, correctCode: `int x = 5;\nif(x == 5 ) {\nSystem.out.println("x is five");\n}` },
+                    { buggedCode: `int[] arr = {1, 2, 3};\narr[3] = 4;\nSystem.out.println(arr.length);`, correctCode: `int[] arr = {1, 2, 3};\narr[2] = 4;\nSystem.out.println(arr.length);` },
+                    { buggedCode: `int x = 5;\nif(x > 3) {\nSystem.out.println("x is greater than 3")\n}`, correctCode: `int x = 5;\nif(x > 3) {\nSystem.out.println("x is greater than 3");\n}` },
+                    { buggedCode: `String str = "Hello"\nSystem.out.println(str.length)`, correctCode: `String str = "Hello";\nSystem.out.println(str.length());` },
+                    { buggedCode: `int[] arr = {1, 2, 3};\nSystem.out.println(arr[3]);`, correctCode: `int[] arr = {1, 2, 3};\nSystem.out.println(arr[2]);` },
+                    { buggedCode: `int x = 5;\nif(x < 10) {\nSystem.out.println("x is less than 10")\n}`, correctCode: `int x = 5;\nif(x < 10) {\nSystem.out.println("x is less than 10");\n}` },
+                    { buggedCode: `int x = 5;\nint y = 10;\nSystem.out.println(x + y)`, correctCode: `int x = 5;\nint y = 10;\nSystem.out.println(x + y);` },
+                    { buggedCode: `int[] arr = {1, 2, 3};\nSystem.out.println(arr[2])`, correctCode: `int[] arr = {1, 2, 3};\nSystem.out.println(arr[1]);` },
+                    { buggedCode: `int x = 5;\nif(x == 5) {\nSystem.out.println("x is five")\n}`, correctCode: `int x = 5;\nif(x == 5) {\nSystem.out.println("x is five");\n}` }
+                ]
+            },
+
+
+            hard: {
+                js: [
+                    { buggedCode: `message = "Hello"\nconsole.log(mesage);`, correctCode: `let message = "Hello";\nconsole.log(message);` },
+                    { buggedCode: `function factorial(n) {\n    return n * factorial(n);\n}`, correctCode: `function factorial(n) {\n    return n === 0 ? 1 : n * factorial(n - 1);\n}` },
+                    { buggedCode: `let arr = [1, 2, 3];\nconsole.log(arr[3]);`, correctCode: `let arr = [1, 2, 3];\nconsole.log(arr[2]);` },
+                    { buggedCode: `function greet(name) {\n    return "Hello " + name;\n}\nconsole.log(greet());`, correctCode: `function greet(name) {\n    return "Hello " + name;\n}\nconsole.log(greet("Alice"));` },
+                    { buggedCode: `let x = 5;\nif (x = 10) {\n    console.log("x is 10");\n}`, correctCode: `let x = 5;\nif (x === 10) {\n    console.log("x is 10");\n}` },
+                    { buggedCode: `let obj = { a: 1, b: 2 };\nconsole.log(obj.c);`, correctCode: `let obj = { a: 1, b: 2 };\nconsole.log(obj.a + obj.b);` },
+                    { buggedCode: `let str = "Hello";\nconsole.log(str.substring(0, 5));`, correctCode: `let str = "Hello";\nconsole.log(str.substring(0, 5));` },
+                    { buggedCode: `let num = "5";\nconsole.log(num + 5);`, correctCode: `let num = 5;\nconsole.log(num + 5);` },
+                    { buggedCode: `let arr = [1, 2, 3];\narr[3] = 4;\nconsole.log(arr);`, correctCode: `let arr = [1, 2, 3];\narr[2] = 4;\nconsole.log(arr);` },
+                    { buggedCode: `function add(a, b) {\n    return a + b;\n}\nconsole.log(add(3));`, correctCode: `function add(a, b) {\n    return a + b;\n}\nconsole.log(add(3, 5));` },
+                    { buggedCode: `let x = 5;\nlet y = "5";\nconsole.log(x == y);`, correctCode: `let x = 5;\nlet y = 5;\nconsole.log(x === y);` },
+                    { buggedCode: `let arr = [1, 2, 3];\nconsole.log(arr.length + 1);`, correctCode: `let arr = [1, 2, 3];\nconsole.log(arr.length);` },
+                    { buggedCode: `let obj = { a: 1, b: 2 };\nconsole.log(obj["a" + "b"]);`, correctCode: `let obj = { a: 1, b: 2 };\nconsole.log(obj.a + obj.b);` },
+                    { buggedCode: `let x = 5;\nif (x < 10) {\n    console.log("x is less than 10")\n}`, correctCode: `let x = 5;\nif (x < 10) {\n    console.log("x is less than 10");\n}` },
+                    { buggedCode: `let str = "Hello";\nconsole.log(str.toUpperCase);`, correctCode: `let str = "Hello";\nconsole.log(str.toUpperCase());` },
+                    { buggedCode: `let x = 5;\nif (x > 3) {\n    console.log("x is greater than 3")\n}`, correctCode: `let x = 5;\nif (x > 3) {\n    console.log("x is greater than 3");\n}` },
+                    { buggedCode: `let arr = [1, 2, 3];\narr.push(4);\nconsole.log(arr[4]);`, correctCode: `let arr = [1, 2, 3];\narr .push(4);\nconsole.log(arr[3]);` },
+                    { buggedCode: `let x = 5;\nif (x == 5) {\n    console.log("x is five")\n}`, correctCode: `let x = 5;\nif (x === 5) {\n    console.log("x is five");\n}` },
+                    { buggedCode: `let str = "Hello";\nconsole.log(str.length + 1);`, correctCode: `let str = "Hello";\nconsole.log(str.length);` },
+                    { buggedCode: `let arr = [1, 2, 3];\narr[3] = 4;\nconsole.log(arr.length);`, correctCode: `let arr = [1, 2, 3];\narr[2] = 4;\nconsole.log(arr.length);` },
+                    { buggedCode: `let x = 5;\nlet y = 10;\nconsole.log(x + y);`, correctCode: `let x = 5;\nlet y = 10;\nconsole.log(x + y);` },
+                    { buggedCode: `let obj = { a: 1, b: 2 };\nconsole.log(obj.a + obj.b + obj.c);`, correctCode: `let obj = { a: 1, b: 2 };\nconsole.log(obj.a + obj.b);` },
+                    { buggedCode: `let arr = [1, 2, 3];\narr[3] = 4;\nconsole.log(arr[3]);`, correctCode: `let arr = [1, 2, 3];\narr[2] = 4;\nconsole.log(arr[2]);` },
+                    { buggedCode: `let str = "Hello";\nconsole.log(str.substring(0, 10));`, correctCode: `let str = "Hello";\nconsole.log(str.substring(0, 5));` },
+                    { buggedCode: `let x = 5;\nif (x == 5) {\n    console.log("x is five")\n}`, correctCode: `let x = 5;\nif (x === 5) {\n    console.log("x is five");\n}` }
+                ],
+
+                python: [
+                    { buggedCode: `Message = "Hello"\nprint(message)`, correctCode: `message = "Hello"\nprint(message)` },
+                    { buggedCode: `def factorial(n):\n    return n * factorial(n)`, correctCode: `def factorial(n):\n    return 1 if n == 0 else n * factorial(n - 1)` },
+                    { buggedCode: `arr = [1, 2, 3]\nprint(arr[3])`, correctCode: `arr = [1, 2, 3]\nprint(arr[2])` },
+                    { buggedCode: `def greet(name):\n    return "Hello " + name\nprint(greet())`, correctCode: `def greet(name):\n    return "Hello " + name\nprint(greet("Alice"))` },
+                    { buggedCode: `x = 5\nif x = 10:\n    print("x is 10")`, correctCode: `x = 5\nif x == 10:\n    print("x is 10")` },
+                    { buggedCode: `obj = {"a": 1, "b": 2}\nprint(obj["c"])`, correctCode: `obj = {"a": 1, "b": 2}\nprint(obj["a"] + obj["b"])` },
+                    { buggedCode: `str = "Hello"\nprint(str.upper)`, correctCode: `str = "Hello"\nprint(str.upper())` },
+                    { buggedCode: `x = 5\ny = "5"\nprint(x == y)`, correctCode: `x = 5\ny = 5\nprint(x == y)` },
+                    { buggedCode: `arr = [1, 2, 3]\narr[3] = 4\nprint(arr)`, correctCode: `arr = [1, 2, 3]\narr[2] = 4\nprint(arr)` },
+                    { buggedCode: `x = 5\nif x < 10:\nprint("x is less than 10")`, correctCode: `x = 5\nif x < 10:\n    print("x is less than 10")` },
+                    { buggedCode: `x = 5\nif x == 5:\nprint("x is five")`, correctCode: `x = 5\nif x == 5:\n    print("x is five")` },
+                    { buggedCode: `arr = [1, 2, 3]\nprint(len(arr) + 1)`, correctCode: `arr = [1, 2, 3]\nprint(len(arr))` },
+                    { buggedCode: `x = 5\nif x > 3:\nprint("x is greater than 3")`, correctCode: `x = 5\nif x > 3:\n    print("x is greater than 3")` },
+                    { buggedCode: `x = 5\ny = "5"\nprint(x == y)`, correctCode: `x = 5\ny = 5\nprint(x == y)` },
+                    { buggedCode: `arr = [1, 2, 3]\narr[3] = 4\nprint(arr[3])`, correctCode: `arr = [1, 2, 3]\narr[2] = 4\nprint(arr[2])` },
+                    { buggedCode: `def subtract(a, b):\n    return a - b\nprint(subtract(5))`, correctCode: `def subtract(a, b):\n    return a - b\nprint(subtract(5, 2))` },
+                    { buggedCode: `x = 5\nif x == 5:\nprint("x is five")`, correctCode: `x = 5\nif x == 5:\n    print("x is five")` },
+                    { buggedCode: `arr = [1, 2, 3]\narr[3] = 4\nprint(arr[3])`, correctCode: `arr = [1, 2, 3]\narr[2] = 4\nprint(arr[2])` }
+                ],
+
+                c: [
+                    { buggedCode: `int factorial(int n) {\n    return n * factorial(n);\n}`, correctCode: `int factorial(int n) {\n    return n == 0 ? 1 : n * factorial(n - 1);\n}` },
+                    { buggedCode: `char* reversed(const char* str) {\n    int len = strlen(str);\n    char* rev = malloc(len);\n    for (int i = 0; i < len; i++) rev[i] = str[len - i - 1];\n    return rev;\n}`, correctCode: `char* reversed(const char* str) {\n    int len = strlen(str);\n    char* rev = malloc(len + 1);\n    for (int i = 0; i < len; i++) rev[i] = str[len - i - 1];\n    rev[len] = '\\0';\n    return rev;\n}` },
+                    { buggedCode: `int arr[3] = {1, 2, 3};\nprintf("%d", arr[3]);`, correctCode: `int arr[3] = {1, 2, 3};\nprintf("%d", arr[2]);` },
+                    { buggedCode: `int x = 5;\nif(x > 3) {\nprintf("x is greater than 3")\n}`, correctCode: `int x = 5;\nif(x > 3) {\nprintf("x is greater than 3");\n}` },
+                    { buggedCode: `int x = 10;\nint y = "10";\nprintf("%d", x == y)`, correctCode: `int x = 10;\nint y = 10;\nprintf("%d", x == y);\n` },
+                    { buggedCode: `int arr[3] = {1, 2, 3};\narr[3] = 4;\nprintf("%d", arr[3]);`, correctCode: `int arr[3] = {1, 2, 3};\narr[2] = 4;\nprintf("%d", arr[2]);` },
+                    { buggedCode: `int x = 5;\nif(x < 10) {\nprintf("x is less than 10")\n}`, correctCode: `int x = 5;\nif(x < 10) {\nprintf("x is less than 10");\n}` },
+                    { buggedCode: `int x = 5;\nint y = 10;\nprintf("%d", x + y)`, correctCode: `int x = 5;\nint y = 10;\nprintf("%d", x + y);\n` },
+                    { buggedCode: `printf("%d", arr[2])`, correctCode: `int arr[3] = {1, 2, 3};\nprintf("%d", arr[1]);` },
+                    { buggedCode: `int count = 0;\nwhile(count < 5) {\nprintf("%d", count)\ncount++\n}`, correctCode: `int count = 0;\nwhile(count < 5) {\nprintf("%d", count);\ncount++;\n}` },
+                    { buggedCode: `int x = 5;\nif(x == 5) {\nprintf("x is five")\n}`, correctCode: `int x = 5;\nif(x == 5) {\nprintf("x is five");\n}` },
+                    { buggedCode: `int arr[3] = {1, 2, 3};\narr[3] = 4;\nprintf("%d", arr[3]);`, correctCode: `int arr[3] = {1, 2, 3};\narr[2] = 4;\nprintf("%d", arr[2]);` },
+                    { buggedCode: `int x = 5;\nif(x < 10) {\nprintf("x is less than 10")\n}`, correctCode: `int x = 5;\nif(x < 10) {\nprintf("x is less than 10");\n}` },
+                    { buggedCode: `int x = 5;\nint y = 10;\nprintf("%d", x + y)`, correctCode: `int x = 5;\nint y = 10;\nprintf("%d", x + y);\n` }
+                ],
+
+                cpp: [
+                    { buggedCode: `int factorial(int n) {\n    return n * factorial(n);\n}`, correctCode: `int factorial(int n) {\n    return n == 0 ? 1 : n * factorial(n - 1);\n}` },
+                    { buggedCode: `std::string reversed(std::string str) {\n    std::reverse(str.begin(), str.end());\n    return str;\n}`, correctCode: `std::string reversed(std::string str) {\n    std::reverse(str.begin(), str.end());\n    return str;\n}` },
+                    { buggedCode: `int arr[3] = {1, 2, 3};\nstd::cout << arr[3];`, correctCode: `int arr[3] = {1, 2, 3};\nstd::cout << arr[2];` },
+                    { buggedCode: `int x = 5;\nif(x > 3) {\nstd::cout << "x is greater than 3"\n}`, correctCode: `int x = 5;\nif(x > 3) {\nstd::cout << "x is greater than 3";\n}` },
+                    { buggedCode: `std::string str = "Hello"\nstd::cout << str`, correctCode: `std::string str = "Hello";\nstd::cout << str;` },
+                    { buggedCode: `int x = 10;\nint y = "10";\nstd::cout << (x == y)`, correctCode: `int x = 10;\nint y = 10;\nstd::cout << (x == y);\n` },
+                    { buggedCode: `int arr[3] = {1, 2, 3};\narr[3] = 4;\nstd::cout << arr[3];`, correctCode: `int arr[3] = {1, 2, 3};\narr[2] = 4;\nstd::cout << arr[2];` },
+                    { buggedCode: `int x = 5;\nif(x < 10) {\nstd::cout << "x is less than 10"\n}`, correctCode: `int x = 5;\nif(x < 10) {\nstd::cout << "x is less than 10";\n}` },
+                    { buggedCode: `int x = 5;\nint y = 10;\nstd::cout << (x + y)`, correctCode: `int x = 5;\nint y = 10;\nstd::cout << (x + y) << std::endl;` },
+                    { buggedCode: `int count = 0;\nwhile(count < 5) {\nstd::cout << count;\ncount++\n}`, correctCode: `int count = 0;\nwhile(count < 5) {\nstd::cout << count;\ncount++;\n}` },
+                    { buggedCode: `int x = 5;\nif(x == 5) {\nstd::cout << "x is five"\n}`, correctCode: `int x = 5;\nif(x == 5) {\nstd::cout << "x is five";\n}` },
+                    { buggedCode: `int arr[3] = {1, 2, 3};\narr[3] = 4;\nstd::cout << arr[3];`, correctCode: `int arr[3] = {1, 2, 3};\narr[2] = 4;\nstd::cout << arr[2];` },
+                    { buggedCode: `int x = 5;\nif(x < 10) {\nstd::cout << "x is less than 10"\n}`, correctCode: `int x = 5;\nif(x < 10) {\nstd::cout << "x is less than 10";\n}` }
+                ],
+
+                java: [
+                    { buggedCode: `int factorial(int n) {\n    return n * factorial(n);\n}`, correctCode: `int factorial(int n) {\n    return n == 0 ? 1 : n * factorial(n - 1);\n}` },
+                    { buggedCode: `String reversed(String str) {\n    return new StringBuilder(str).reverse().toString();\n}`, correctCode: `String reversed(String str) {\n    return new StringBuilder(str).reverse().toString();\n}` },
+                    { buggedCode: `int[] arr = {1, 2, 3};\nSystem.out.println(arr[3]);`, correctCode: `int[] arr = {1, 2, 3};\nSystem.out.println(arr[2]);` },
+                    { buggedCode: `int x = 5;\nif(x > 3) {\nSystem.out.println("x is greater than 3")\n}`, correctCode: `int x = 5;\nif(x > 3) {\nSystem.out.println("x is greater than 3");\n}` },
+                    { buggedCode: `String str = "Hello"\nSystem.out.println(str)`, correctCode: `String str = "Hello";\nSystem.out.println(str);` },
+                    { buggedCode: `int x = 10;\nint y = "10";\nSystem.out.println(x == y)`, correctCode: `int x = 10;\nint y = 10;\nSystem.out.println(x == y);` },
+                    { buggedCode: `int[] arr = {1, 2, 3};\narr[3] = 4;\nSystem.out.println(arr[3]);`, correctCode: `int[] arr = {1, 2, 3};\narr[2] = 4;\nSystem.out.println(arr[2]);` },
+                    { buggedCode: `int x = 5;\nif(x < 10) {\nSystem.out.println("x is less than 10")\n}`, correctCode: `int x = 5;\nif(x < 10) {\nSystem.out.println("x is less than 10");\n}` },
+                    { buggedCode: `int x = 5;\nint y = 10;\nSystem.out.println(x + y)`, correctCode: `int x = 5;\nint y = 10;\nSystem.out.println(x + y);` },
+                    { buggedCode: `int[] arr = {1, 2, 3};\nSystem.out.println(arr[2])`, correctCode: `int[] arr = {1, 2, 3};\nSystem.out.println(arr[1]);` },
+                    { buggedCode: `int x = 5;\nif(x == 5) {\nSystem.out.println("x is five")\n}`, correctCode: `int x = 5;\nif(x == 5) {\nSystem.out.println("x is five");\n}` },
+                    { buggedCode: `int x = 5;\nif(x > 3) {\nSystem.out.println("x is greater than 3")\n}`, correctCode: `int x = 5;\nif(x > 3) {\nSystem.out.println("x is greater than 3");\n}` },
+                    { buggedCode: `String str = "Hello"\nSystem.out.println(str.length)`, correctCode: `String str = "Hello";\nSystem.out.println(str.length());` },
+                    { buggedCode: `int[] arr = {1, 2, 3};\nSystem.out.println(arr[3]);`, correctCode: `int[] arr = {1, 2, 3};\nSystem.out.println(arr[2]);` },
+                    { buggedCode: `int x = 5;\nif(x < 10) {\nSystem.out.println("x is less than 10")\n}`, correctCode: `int x = 5;\nif(x < 10) {\nSystem.out.println("x is less than 10");\n}` },
+                    { buggedCode: `int x = 5;\nint y = 10;\nSystem.out.println(x + y)`, correctCode: `int x = 5;\nint y = 10;\nSystem.out.println(x + y);` },
+                    { buggedCode: `int[] arr = {1, 2, 3};\nSystem.out.println(arr[2])`, correctCode: `int[] arr = {1, 2, 3};\nSystem.out.println(arr[1]);` },
+                    { buggedCode: `int x = 5;\nif(x == 5) {\nSystem.out.println("x is five")\n}`, correctCode: `int x = 5;\nif(x == 5) {\nSystem.out.println("x is five");\n}` }
+                ]
+            }
+        };
+
+        let currentLevel = 0;
+        let selectedDifficulty;
+        let selectedLanguage;
+        let gameLevels;
+
+        function startGame() {
+            selectedDifficulty = document.getElementById("difficulty").value;
+            selectedLanguage = document.getElementById("language").value;
+            gameLevels = levels[selectedDifficulty][selectedLanguage];
+            shuffleArray(gameLevels);
+            currentLevel = 0;
+            document.getElementById("start-menu").classList.add("hidden");
+            document.getElementById("game").classList.remove("hidden");
+            loadLevel();
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function loadLevel() {
+            if (currentLevel < gameLevels.length) {
+                document.getElementById("code-snippet").innerText = gameLevels[currentLevel].buggedCode;
+                document.getElementById("result-message").innerText = "";
+                document.getElementById("code-editor").value = "";
+            } else {
+                document.getElementById("result-message").innerText = "🎉 Congratulations! You escaped the Dungeon!";
+                document.getElementById("game").classList.add("hidden");
+                document.getElementById("play-again").classList.remove("hidden");
+            }
+        }
+
+        function normalizeCode(code) {
+            return code.replace(/\s+/g, ' ').trim();
+        }
+
+        function checkCode() {
+            let userCode = normalizeCode(document.getElementById("code-editor").value);
+            let correctCode = normalizeCode(gameLevels[currentLevel].correctCode);
+
+            if (userCode === correctCode) {
+                document.getElementById("result-message").innerText = "✅ Bug Fixed! Moving to the next level...";
+                currentLevel++;
+                if (currentLevel < gameLevels.length) {
+                    setTimeout(loadLevel, 2000);
+                } else {
+                    loadLevel();
+                }
+            } else {
+                document.getElementById("result-message").innerText = "❌ Incorrect! Try again.";
+            }
+        }
+
+        function restartGame() {
+            document.getElementById("play-again").classList.add("hidden");
+            document.getElementById("start-menu").classList.remove("hidden");
+        }
+    </script>
+</body>
+
+</html>

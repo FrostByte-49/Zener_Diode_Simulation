@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="android-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="icon" href="zner_img/Picture_16.webp" loading="lazy">
+  <title>Zener Diode Simulation</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preload" as="image" href="zner_img/Picture_20.webp">
+
+  <!-- Google Tag -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-BLQTLTQV5S"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-BLQTLTQV5S');
+  </script>
+
+</head>
+
+<body>
+  <header>
+    <!-- <h1 class="typed-out">Zener Diode! </h1> -->
+    <a href="index.html"><img src="Team_/Logo_.webp" alt="Logo" id="logo"></a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="theory.html">Theory</a>
+      <a href="procedure.html">Procedure</a>
+      <a href="simulation.html">Simulation</a>
+      <a href="about.html" class="active">About</a>
+    </nav>
+
+    <button id="menu-toggle">☰</button>
+    <div id="mobile-menu">
+      <a href="index.html">Home</a>
+      <a href="theory.html">Theory</a>
+      <a href="procedure.html">Procedure</a>
+      <a href="simulation.html">Simulation</a>
+      <a href="about.html">About</a>
+      <a href="Loader_/Login_/register.html">Login</a>
+      <a href="Loader_/Dashboard_/dashboard.html">Dashboard</a>
+    </div>
+
+    <!-- <a href="Loader_/Login_/register.html">
+      <button class="sign-in-btn">
+        <svg width="37" height="37" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="white"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        
+          <circle cx="10" cy="8" r="4" stroke="white" stroke-width="2" />
+          <path d="M4 20c0-4 3-7 6-7s6 3 6 7" stroke="white" stroke-width="2" />
+        </svg>
+      </button>
+    </a> -->
+
+  </header>
+
+
+  <!-- Cursor Animation
+<svg xmlns="http://www.w3.org/2000/svg" class="goo" version="1.1" width="100%">
+  <defs>
+    <filter id="goo">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur"></feGaussianBlur>
+      <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 35 -15" result="goo"></feColorMatrix>
+      <feComposite in="SourceGraphic" in2="goo" operator="atop"></feComposite>
+    </filter>
+  </defs>
+</svg>
+<div id="cursor"></div> -->
+
+
+  <section class="about-hero">
+    <div class="container">
+      <h1>About Us</h1>
+      <p>
+        We are a team of seven passionate engineering enthusiasts dedicated to simplifying and demonstrating the
+        principles of Zener Diodes. Through innovative simulations, interactive tools, and hands-on learning, we
+        transform complex concepts into clear, engaging experiences. Our mission is to bridge theory with practice,
+        empowering learners with deeper understanding and real-world applications.
+      </p>
+    </div>
+  </section>
+
+  <section class="team">
+    <div class="container">
+      <h2>Meet the Team Quantum Squad! </h2>
+      <div class="team-grid">
+        <div class="team-member">
+          <img src="Team_/Pics/Neeta_Ma'am_.webp" alt="Team Member 1">
+          <h3> <a href="https://pvppcoe.ac.in/mrs-neeta-manish-vanage/" target="_blank"> Prof. Neeta Vanage</a>
+          </h3>
+          <b>
+            <p>Mentor</p>
+          </b>
+        </div>
+
+        <div class="team-member">
+          <img src="Team_/Pics/Manasi_.webp" alt="Team Member 2">
+          <h3>Manasi Suryawanshi </a></h3>
+          <b>
+            <p>Project Manager</p>
+          </b>
+        </div>
+
+        <div class="team-member">
+          <img src="Team_/Pics/Krishna_.webp" alt="Team Member 3">
+          <h3> <a href="https://krish4u.bio.link" target="_blank"> Krishna Choudhary </a></h3>
+          <b>
+            <p>Frontend Architect & Lead Dev</p>
+          </b>
+        </div>
+
+        <div class="team-member">
+          <img src="Team_/Pics/Pranav_.webp" alt="Team Member 4">
+          <h3>Pranav Khalate </a></h3>
+          <b>
+            <p>Backend Architect & Lead Dev</p>
+          </b>
+        </div>
+
+        <div class="team-member">
+          <img src="Team_/Pics/Akif_.webp" alt="Team Member 5">
+          <h3>Akif Khan </a></h3>
+          <b>
+            <p>Marketing & Brand Strategist</p>
+          </b>
+        </div>
+
+        <div class="team-member">
+          <img src="Team_/Pics/Soham_.webp" alt="Team Member 6">
+          <h3>Soham Baviskar </a></h3>
+          <b>
+            <p>Content & Documentation Lead</p>
+          </b>
+        </div>
+
+        <div class="team-member">
+          <img src="Team_/Pics/Hujaifa_.webp" alt="Team Member 7">
+          <h3>Hujaifa Momin </a></h3>
+          <b>
+            <p>Research & Innovation Strategist</p>
+          </b>
+        </div>
+
+        <div class="team-member">
+          <img src="Team_/Pics/Swayam_.webp" alt="Team Member 8">
+          <h3>Swayam Sonavane </a></h3>
+          <b>
+            <p>QA & Testing Lead</p>
+          </b>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="vision">
+    <div class="container">
+      <h2>Our Vision</h2>
+      <p>
+        "Our mission is to demystify complex concepts like Zener Diodes by seamlessly integrating interactive
+        simulations with solid theoretical foundations. This combination empowers learners to explore and understand
+        intricate ideas in a practical, engaging way, making even the most challenging topics accessible."
+      </p>
+    </div>
+  </section>
+
+  <!-- <section class="testimonials">
+    <div class="testimonial-header">Testimonials</div>
+    <div class="testimonial-container">
+      <div class="testimonial">
+        <h3>Sushant Satale</h3>
+        <p class="stars">★★★★★</p>
+        <p>"This simulation is an absolute lifesaver! I was struggling to understand Zener diodes in my circuits class,
+          but this tool made everything so much clearer. The interactive design, real-time calculations, and the way it
+          lets you visualize the circuit behavior—it's all just amazing. Honestly, I wish our professors used something
+          like this to teach in class. A must-use for anyone studying electronics!" </p>
+      </div>
+
+      <div class="testimonial">
+        <h3>Sujal Gotarne</h3>
+        <p class="stars">★★★★☆</p>
+        <p>"I’ve used different circuit simulators, but this one stands out for its simplicity and accuracy. The UI is
+          clean, and the instant calculations make it an excellent learning tool. Would love to see more components
+          added in the future!"</p>
+      </div>
+
+      <div class="testimonial">
+        <h3>Anuj Patel</h3>
+        <p class="stars">★★★★☆</p>
+        <p>"I used this simulation to prepare for my project presentation, and it really helped me understand Zener
+          diodes better. The ability to tweak values and instantly see results is a game-changer!"</p>
+      </div>
+
+      <div class="testimonial">
+        <h3>Rohit Chakor</h3>
+        <p class="stars">★★★★☆</p>
+        <p>"One of the best educational tools I’ve come across! The ability to experiment and instantly see changes
+          makes it perfect for self-learning. Hope to see more circuit types added!"</p>
+      </div>
+
+      <div class="testimonial">
+        <h3>Dhiraj Mahajan</h3>
+        <p class="stars">★★★★★</p>
+        <p>"I had an upcoming quiz on Zener diodes and needed a quick way to understand their working. This simulation
+          helped me visualize the behavior of Zener breakdown better than any textbook! The combination of a
+          well-structured interface, real-time calculations, and the observation table made studying so much easier.
+          Also, the fact that it has a proper feedback section means the creators are actually looking to improve it
+          further. Really looking forward to seeing more features!"</p>
+      </div>
+
+      <div class="testimonial">
+        <h3>Atharv Binwade</h3>
+        <p class="stars">★★★★★</p>
+        <p>"I usually find circuit simulations boring, but this one actually makes learning fun. The smooth UI,
+          interactive elements, and the way it helps visualize complex concepts—it’s just perfect. I used this to
+          cross-check my assignment calculations, and it helped me identify mistakes I wouldn’t have noticed otherwise.
+          Honestly, this should be part of our coursework!"</p>
+      </div>
+
+      <div class="testimonial">
+        <h3>Nitin Katkam</h3>
+        <p class="stars">★★★★★</p>
+        <p>"I tried this out before my lab exam, and it really helped me understand how a Zener diode regulates voltage.
+          The instant feedback on input values is such a great feature because I could experiment with different
+          resistances and see the effect in real-time. Just wish there was a way to compare different circuit designs
+          side by side!"</p>
+      </div>
+
+      <div class="testimonial">
+        <h3>Tejas Gaikwad</h3>
+        <p class="stars">★★★★★</p>
+        <p>"This is such a well-designed tool! The calculations are accurate, and it gives a very hands-on experience. I
+          love how the results update instantly when I change the input values. It actually helped me solve a problem I
+          was stuck on for hours. Highly recommend it to any electronics student!"</p>
+      </div>
+
+      <div class="testimonial">
+        <h3>Om Pangare</h3>
+        <p class="stars">★★★★★</p>
+        <p>"What I love about this simulation is how it allows experimentation. In a real lab, we don’t always get the
+          freedom to test as many scenarios, but here, I can keep changing the input values and see how the Zener diode
+          responds. It has definitely deepened my understanding of voltage regulation!"</p>
+      </div>
+
+      <div class="testimonial">
+        <h3>Aryan Sawant</h3>
+        <p class="stars">★★★★☆</p>
+        <p>"I needed a quick way to revise Zener diodes for my viva, and this simulation did the job perfectly. I could
+          experiment with different scenarios and see how the circuit behaved under different conditions. The best part
+          is the detailed calculations—it’s like having a virtual tutor explain things to you step by step!"</p>
+      </div>
+
+      <div class="testimonial">
+        <h3>Pratik Mandore</h3>
+        <p class="stars">★★★★☆</p>
+        <p>"Really helpful tool for students! The observation table and graph plotting feature are great additions.
+          Would love to see more customization options!"</p>
+      </div>
+    </div>
+  </section> -->
+
+  <section class="contact-us-section">
+    <div class="grid-container">
+      <div class="left-side">
+        <h2>Get in Touch!</h2>
+        <p>We'd love to hear from you! Whether you have a question or just want to connect, feel free to reach out to
+          us.</p>
+        <p>Our team is here to assist you with anything related to our Zener Diode project or to chat about tech!</p>
+      </div>
+
+      <!-- Right Side -->
+      <div class="right-side">
+        <h2>Contact Us</h2>
+        <div class="contact-icons">
+          <div class="contact-item">
+            <a href="mailto:pranav.kh25@gmail.com" target="_blank">
+              <img src="zner_img/Picture_14.webp" alt="Email">
+            </a>
+          </div>
+          <div class="contact-item">
+            <a href="https://www.instagram.com/team.quantum.squad" target="_blank">
+              <img src="zner_img/Picture_12.webp" alt="Instagram">
+            </a>
+          </div>
+          <div class="contact-item">
+            <a href="https://www.reddit.com/user/StateAgreeable1376/" target="_blank">
+              <img src="zner_img/Picture_18.webp" alt="Reddit">
+            </a>
+          </div>
+          <div class="contact-item">
+            <a href="https://github.com/nioh97" target="_blank">
+              <img src="zner_img/Picture_17.webp" alt="GitHub">
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </section>
+
+
+
+  <!---Footer--->
+  <div>
+    <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+      viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+      <defs>
+        <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+      </defs>
+      <g class="parallax">
+        <use xlink:href="#gentle-wave" x="48" y="0" fill="#121212" />
+        <use xlink:href="#gentle-wave" x="48" y="3" fill="#1e1e1e" />
+        <use xlink:href="#gentle-wave" x="48" y="5" fill="#2a2a2a" />
+        <use xlink:href="#gentle-wave" x="48" y="7" fill="#000000" />
+      </g>
+    </svg>
+  </div>
+
+  <footer class="footer-content">
+    <h4>&copy; 2025 Zener Diode Simulation | All Rights Reserved</h4>
+    <h4>Developed by Quantum Squad</h4>
+    <h4> <a href="https://pvppcoe.ac.in/" target="_blank"> VPPCOE & VA </a> </h4>
+  </footer>
+  </div>
+
+  </div>
+
+  <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+  <df-messenger intent="WELCOME" chat-title="ZenerBot" agent-id="833e6aa5-19a2-4679-a363-5fae299d2133"
+    language-code="en"></df-messenger>
+
+  <script src="Loader_/Preloader_/script.js"></script>
+</body>
+
+</html>

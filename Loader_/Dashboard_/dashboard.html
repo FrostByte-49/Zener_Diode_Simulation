@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <link rel="icon" href="../../zner_img/Picture_16.webp" loading="lazy">
+
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Profile Section -->
+        <div class="profile-section">
+            <img id="profile-pic" src="default.png" alt="Profile Picture">
+            <h2>Welcome, <span id="username">User</span>!</h2>
+            <input type="file" id="profile-pic-file" accept="image/*">
+
+            <div class="button-container">
+                <label for="profile-pic-file" class="upload-btn">Choose Image</label>
+                <button id="upload-image">Upload Image</button>
+            </div>
+        </div>
+
+        <!-- User Info Section -->
+        <div class="user-info">
+            <h3>Email: <span id="email"></span></h3>
+            <input type="text" id="username-input" placeholder="Enter new name">
+            <button id="save-profile">Save Changes</button>
+        </div>
+
+        <!-- Achievements & Badges Section -->
+        <div class="stats-container">
+            <div class="stats-box">
+                <h3>Achievements</h3>
+                <ul id="achievements"></ul>
+            </div>
+
+            <div class="stats-box">
+                <h3>Badges</h3>
+                <ul id="badges"></ul>
+            </div>
+        </div>
+
+        <!-- Progress Section -->
+        <div class="progress-section">
+            <h3>Challenges Completed: <span id="challenges"></span></h3>
+            <h3>Visit Streak: <span id="streak"></span></h3>
+        </div>
+
+
+        <!-- Challenge Buttons -->
+        <div class="challenges">
+            <h3>Take The Challenge!</h3>
+
+            <a href="../Challenges_/typ_speed.html">
+                <button id="challenge-1">Byte-Blitz</button>
+            </a>
+
+            <a href="../Challenges_/rapid_fire.html">
+                <button id="challenge-2">Rapid-Fire</button>
+            </a>
+
+            <a href="../Challenges_/memory.html">
+                <button id="challenge-3">Recall-Rush</button>
+            </a>
+
+            <a href="../Challenges_/debug.html">
+                <button id="challenge-4">Bug-Hunt</button>
+            </a>
+
+        </div>
+
+        <!-- Logout Button -->
+        <button id="logout">Logout</button>
+    </div>
+
+    <!-- <script type="module" src="dashboard.js"></script> -->
+    <script type="module" src="dashboard_.js"></script>
+</body>
+
+</html>

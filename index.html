@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="android-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Patrick+Hand&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@800&display=swap" rel="stylesheet">
+  <link rel="icon" href="zner_img/Picture_16.webp" loading="lazy">
+  <title>Zener Diode Simulation</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preload" as="image" href="zner_img/Picture_1.webp">
+
+  <!-- Google Tag -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-BLQTLTQV5S"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-BLQTLTQV5S');
+  </script>
+</head>
+
+<body>
+  <div class="pre-loader">
+    <iframe id="loader-frame" src="Loader_/Preloader_/preloader.html" frameborder="0"
+      style="width:100%; height:100vh; overflow:hidden; pointer-events: none; display: none;"></iframe>
+  </div>
+
+  <div id="content" style="display: none;">
+    <header>
+      <a href="index.html"><img src="Team_/Logo_.webp" alt="Logo" id="logo"></a>
+      <nav>
+        <a href="index.html" class="active">Home</a>
+        <a href="theory.html">Theory</a>
+        <a href="procedure.html">Procedure</a>
+        <a href="simulation.html">Simulation</a>
+        <a href="about.html">About</a>
+      </nav>
+
+      <button id="menu-toggle">☰</button>
+      <div id="mobile-menu">
+        <a href="index.html">Home</a>
+        <a href="theory.html">Theory</a>
+        <a href="procedure.html">Procedure</a>
+        <a href="simulation.html">Simulation</a>
+        <a href="about.html">About</a>
+        <a href="Loader_/Login_/register.html">Login</a>
+        <a href="Loader_/Dashboard_/dashboard.html">Dashboard</a>
+      </div>
+
+      <div class="right-head">
+        <div class="dash-img">
+          <a href="Loader_/Dashboard_/dashboard.html">
+            <button id="dashboard-btn">
+              <img src="Team_/1.png">
+            </button>
+          </a>
+        </div>
+
+        <a href="Loader_/Login_/register.html">
+          <button class="sign-in-btn">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+              stroke="#c7ff75" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="10" cy="8" r="4" stroke="#c7ff75" stroke-width="2" />
+              <path d="M4 20c0-4 3-7 6-7s6 3 6 7" stroke="#c7ff75" stroke-width="2" />
+            </svg>
+          </button>
+        </a>
+      </div>
+    </header>
+
+
+    <section class="banner">
+      <div class="banner-overlay">
+        <h1>WELCOME,</h1>
+        <h2>Zener Diode Simulator!</h2>
+        <p>Unlock the power of Zener diodes with interactive simulations, clear insights, and practical
+          applications—learn, explore, and master their principles!</p>
+        <h4>- Team Quantum Squad!</h4>
+        <a href="simulation.html" target="_blank" class="cta-button">EXPLORE!</a>
+        <a href="https://rb.gy/0aigtz" target="_blank" class="cta-button" style="margin-left: 2% !important;">GET THE
+          APP</a>
+        <div class="sticky-note note1">
+          <p>"Explore the Zener Diode Simulation! ⚡ Build, Analyze, and Learn in Real Time!"</p>
+        </div>
+      </div>
+    </section>
+
+
+    <section class="features">
+      <!-- <h2 class="features-title">FEATURES</h2> -->
+
+      <div class="content">
+        <div class="card-container">
+          <div class="card">
+            <div class="card-header">
+              <img src="zner_img/Picture_9.webp" alt="Theory Icon" loading="lazy">
+              <h3>Theory</h3>
+            </div>
+            <p>Explore the breakdown voltage and reverse bias operation of Zener Diodes.</p>
+            <a href="theory.html" target="_blank" class="card-button">Learn More</a>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <img src="zner_img/Picture_10.webp" target="_blank" alt="Procedure Icon" loading="lazy">
+              <h3>Procedure</h3>
+            </div>
+            <p>Step-by-step instructions for Zener Diode simulations with a clear guide.</p>
+            <a href="procedure.html" target="_blank" class="card-button">Read The Guide</a>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <img src="zner_img/Picture_15.webp" target="_blank" alt="Simulation Icon" loading="lazy">
+              <h3>Simulation</h3>
+            </div>
+            <p>Experiment with Zener Diode behavior using our interactive simulation tool.</p>
+            <a href="simulation.html" target="_blank" class="card-button">Try Now</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- Why This Simulation Section -->
+    <section class="why-simulation">
+
+      <!-- Left Content Section-->
+      <div class="container12">
+        <div class="text-content">
+          <h2>Why Choose This Zener Diode Simulation?</h2>
+          <p>This interactive Zener Diode simulation provides a comprehensive and hands-on approach to understanding the
+            behavior of Zener diodes in electronic circuits. Whether you are a student, engineer, or electronics
+            enthusiast, this tool offers an ideal learning experience for users at various levels of expertise.</p>
+          <b>Key features of this simulation include:</b>
+          <br></br>
+          <ul>
+            <li><strong>Real-time Visualization:</strong> Observe the dynamic behavior of Zener diodes under varying
+              circuit conditions and configurations.</li>
+            <li><strong>Immediate Feedback:</strong> Instantly see the impact of component adjustments on circuit
+              performance, enabling faster learning.</li>
+            <li><strong>Precise Calculations:</strong> Accurately calculate Zener current, voltage, and load resistance
+              to analyze circuit behavior.</li>
+            <li><strong>User-Friendly Interface:</strong> Designed for ease of use, the simulation allows for seamless
+              interaction with intuitive controls and clear results.</li>
+          </ul>
+          <!-- <a href="#simulation" class="btn-primary">Experience It Now</a> -->
+        </div>
+
+
+        <!-- Right Content Section -->
+        <div class="right-section">
+          <!-- Image Section -->
+          <div class="image-content">
+            <img src="zner_img/Picture_21.webp" alt="Zener Diode Simulation" loading="lazy">
+          </div>
+          <!-- Video Section -->
+          <div class="video-content">
+            <video controls>
+              <source src="zner_img/Zener_Animation.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+
+    <!-- <section class="quiz-leaderboard">
+   <div class="quiz-info">
+    <h2>Test Your Knowledge!</h2>
+    <p>Take the Zener Diode Quiz and see where you stand. Challenge yourself and compete for the top spot!</p>
+    <a href="https://forms.gle/AZXsEWAs3hkAvw8v7" class="quiz-button" target="_blank">Start Quiz</a>
+   </div>
+
+   <div class="leaderboard">
+    <h2>Leaderboard</h2>
+    <ul id="leaderboard-list">
+      <li>Loading...</li> 
+    </ul>
+   </div>
+   </section>  -->
+
+
+    <!-- <section class="stats">
+    <iframe width="1200" height="1500"
+      src="https://lookerstudio.google.com/embed/reporting/0378bb03-e1d7-437c-aba7-67d256162c6e/page/kIV1C"
+      frameborder="0" style="border:0" allowfullscreen
+      sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>
+   </section> -->
+
+
+   <section class="tutorial">
+      <h2>Simulation Tutorial</h2>
+      <br>
+      <div class="video-container">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/VYTMWNntCx0" title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen>
+        </iframe>
+      </div>
+  </section>
+
+
+
+    <!-- Scroll Testimonial -->
+    <section class="container001">
+      <object data="Loader_/Testimonial_/testimonial.html" width="100%" height="1350px"></object>
+    </section>
+
+
+    <!-- Feedback/Quiz Section -->
+    <section id="feedback">
+      <!-- Feedback Form -->
+      <div class="left-sidee">
+        <div class="form-feed">
+          <form id="feedback-form" action="https://api.web3forms.com/submit" method="POST">
+            <h2>Feedback Form</h2>
+
+            <!-- Web3Forms API Key -->
+            <input type="hidden" name="access_key" value="5b46ad18-3413-4535-bb8d-95e6db52e6d8" />
+
+            <!-- Name Field -->
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" placeholder="Your name" required />
+
+            <!-- Email Field -->
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" placeholder="Your email" required />
+
+            <!-- Rating Field -->
+            <label for="rating">Rating (1-5):</label>
+            <select id="rating" name="rating">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+
+            <!-- Feedback Message -->
+            <label for="message">Feedback Message:</label>
+            <textarea id="message" name="message" placeholder="Your feedback" required></textarea>
+
+            <!-- Submit Button -->
+            <button type="submit">Submit Feedback</button>
+
+            <!-- Redirect After Submission -->
+            <input type="hidden" name="redirect" value="https://web3forms.com/success" />
+          </form>
+        </div>
+      </div>
+
+      <div class="div right-sidee">
+        <div class="quiz-info">
+          <h2>Test Your Knowledge!</h2>
+          <p>Take the Zener Diode Quiz and see where you stand. Challenge yourself and compete for the top spot!</p>
+          <a href="https://forms.gle/uR1nfPmNnUWsLtdn8" class="quiz-button" target="_blank">Start Quiz</a>
+        </div>
+
+
+        <!-- Newsletter Signup -->
+        <!-- <div class="newsletter-container">
+          <h2>Join Our Newsletter!</h2>
+          <p>Subscribe to get the latest updates!</p>
+          <form id="newsletterForm">
+            <div class="name-inputs">
+              <input type="text" id="firstName" placeholder="First Name" required>
+              <input type="text" id="lastName" placeholder="Last Name" required>
+            </div>
+            <input type="email" id="email" placeholder="Enter your email" required>
+            <button type="submit">Subscribe</button>
+          </form>
+          <p id="responseMessage"></p>
+        </div> -->
+
+        <div class="newsletter-container">
+          <script async src="https://eocampaign1.com/form/2afd68aa-0d25-11f0-bc9d-dbb8d5ca7c04.js"
+            data-form="2afd68aa-0d25-11f0-bc9d-dbb8d5ca7c04"></script>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!---Footer--->
+    <div>
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+        viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" fill="#121212" />
+          <use xlink:href="#gentle-wave" x="48" y="3" fill="#1e1e1e" />
+          <use xlink:href="#gentle-wave" x="48" y="5" fill="#2a2a2a" />
+          <use xlink:href="#gentle-wave" x="48" y="7" fill="#000000" />
+        </g>
+      </svg>
+    </div>
+
+    <footer class="footer-content">
+      <h4>&copy; 2025 Zener Diode Simulation | All Rights Reserved</h4>
+      <h4>Developed by Quantum Squad</h4>
+      <h4> <a href="https://pvppcoe.ac.in/" target="_blank"> VPPCOE & VA </a> </h4>
+      <!-- <p>Version 1.0 | Last Updated: March 2025</p> -->
+      <!-- <p><a href="#">Privacy Policy</a> | <a href="#">Terms of Use</a></p> -->
+
+    </footer>
+  </div>
+
+  </div>
+  </div>
+  <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+  <df-messenger intent="WELCOME" chat-title="ZenerBot" agent-id="833e6aa5-19a2-4679-a363-5fae299d2133"
+    language-code="en"></df-messenger>
+
+  <script>
+    if (
+      performance.navigation.type === 1 ||
+      performance.getEntriesByType("navigation")[0].type === "reload" ||
+      !sessionStorage.getItem("loaderPlayed")
+    ) {
+
+      document.getElementById("loader-frame").style.display = "block";
+      document.getElementById("content").style.display = "none";
+
+      sessionStorage.setItem("loaderPlayed", "true");
+
+      setTimeout(() => {
+        document.getElementById("loader-frame").style.display = "none";
+        document.getElementById("content").style.display = "block";
+      }, 4000);
+    } else {
+
+      document.getElementById("loader-frame").style.display = "none";
+      document.getElementById("content").style.display = "block";
+    }
+  </script>
+
+  <script src="Loader_/Preloader_/script.js"></script>
+
+</body>
+
+</html>

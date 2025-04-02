@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="android-mobile-web-app-capable" content="yes" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Days+One&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
+    <title>Sketch </title>
+    <style>
+        canvas {
+            box-shadow: 0 4% 8% rgba(0, 0, 0, 0.1);
+            border-radius: 0%;
+            display: blank;
+            width: 90% !important;
+            height: 450px !important;
+            border: 2px solid black;
+            margin-left: 0%;
+            margin-top: 2%;
+        }
+
+        .canvas-container {
+            display: flex;
+            justify-content: center !important;
+            align-items: center !important;
+            padding: 10px;
+            /* Adjust padding */
+            border: 2px solid #ccc;
+            /* Modify border */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            /* Change box-shadow */
+            border-radius: 10px !important;
+            /* Optional */
+            height: 1000px !important;
+        }
+
+        html {
+            overflow: hidden !important;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            margin: 0;
+            background: #f0f2f5;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+
+        }
+
+        .toolbar {
+            padding: 1%;
+            background: #ffffff;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            gap: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            padding: 13px 10px;
+            background: linear-gradient(120deg, #e03897, #ff009d);
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.4s ease-in-out;
+            display: flex;
+            align-items: center;
+            gap: 0px;
+            margin-left: 3.2%;
+            position: relative;
+            overflow: hidden;
+            clip-path: polygon(0 10%, 10% 0, 20% 10%, 30% 0, 40% 10%, 50% 0, 60% 10%, 70% 0, 80% 10%, 90% 0, 100% 10%, 100% 90%, 90% 100%, 80% 90%, 70% 100%, 60% 90%, 50% 100%, 40% 90%, 30% 100%, 20% 90%, 10% 100%, 0 90%);
+            box-shadow: 0 5px 10px rgba(224, 56, 151, 0.4);
+        }
+
+        /* Glow Effect */
+        button::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 10%, transparent 50%);
+            transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0;
+        }
+
+        button:hover::before {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        /* Gradient Shine Effect */
+        button::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: skewX(-30deg);
+            transition: all 0.5s ease-in-out;
+        }
+
+        button:hover::after {
+            left: 100%;
+        }
+
+        /* Hover Effect */
+        button:hover {
+            background: linear-gradient(120deg, #ff009d, #e03897);
+            transform: translateY(-1px) scale(1.03);
+            box-shadow: 0 7px 15px rgba(255, 0, 157, 0.5);
+        }
+
+        /* Active (Click) Effect */
+        button:active {
+            transform: translateY(0) scale(0.97);
+            box-shadow: 0 3px 7px rgba(255, 0, 157, 0.3);
+        }
+
+        .control-panel {
+            position: fixed;
+            right: 20px;
+            margin-top: 8%;
+            top: 70px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            min-width: 220px;
+        }
+
+        .slider-container {
+            margin: 10px 0;
+        }
+
+        .slider-container label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .component-value {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 style="text-transform: uppercase; font-weight: 800; font-family: 'Days One', sans-serif;">Components</h1>
+    <div class="toolbar" alt="components">
+        <button onclick="addComponent('Battery')" data-id="1">🔋 Battery</button>
+        <button onclick="addComponent('Resistor')" data-id="2">ㆄ Resistor</button>
+        <button onclick="addComponent('VerticalResistor')" data-id="7">ㆄ Load Resistor</button>
+        <button onclick="addComponent('ZenerDiode')" data-id="3">🔶 Zener Diode</button>
+        <button onclick="addComponent('Ammeter')" data-id="5">⚡ Ammeter</button>
+        <button onclick="addComponent('Wire')" data-id="4">🔧 Wire (Horizontal)</button>
+        <button onclick="addComponent('VerticalWire')" data-id="6">🔧 Wire (Vertical)</button>
+    </div>
+
+    <div class="control-panel" id="controlPanel">
+        <h3 style="margin-top:0; color: #333;">Component Controls</h3>
+        <div id="componentControls"></div>
+    </div>
+    <script>
+        let components = [];
+        let wires = [];
+        // let selectedComponent = null;   
+        let draggingNode = true;
+        let hoveredNode = true;
+        const GRID_SIZE = 25;
+
+
+        class Component {
+            constructor(type, x, y, orientation = 'horizontal') {
+                this.type = type;
+                this.x = x;
+                this.y = y;
+                this.orientation = orientation;
+                this.nodes = [];
+                this.properties = {
+                    voltage: type === 'Battery' ? 9 : 0,
+                    resistance: type === 'Resistor' || type === 'VerticalResistor' ? 100 : 0,
+                    Vz: type === 'ZenerDiode' ? 5.1 : 0
+                };
+                this.color = {
+                    Battery: '#ff4444',
+                    Resistor: '#6666ff',
+                    VerticalResistor: '#6666ff', // Same color as horizontal resistor
+                    ZenerDiode: '#ff9900',
+                    Wire: '#ff9900',
+                    Ammeter: '#ff9900',
+                    Voltmeter: '#ff9900',
+                }[type];
+                this.current = 0;
+                this.voltage = 0;
+                this.isSelected = false;
+                this.rotationAngle = 0;
+                this.updateNodes();
+            }
+
+            updateNodes() {
+                switch (this.type) {
+                    case 'Battery':
+                        this.nodes = [
+                            { x: this.x - 40, y: this.y },
+                            { x: this.x + 40, y: this.y }
+                        ];
+                        break;
+
+                    case 'Resistor':
+                        this.nodes = [
+                            { x: this.x - 40, y: this.y },
+                            { x: this.x + 40, y: this.y }
+                        ];
+                        break;
+
+                    case 'VerticalResistor':
+                        this.nodes = [
+                            { x: this.x, y: this.y - 40 }, // Top connection
+                            { x: this.x, y: this.y + 40 }  // Bottom connection
+                        ];
+                        break;
+
+                    case 'ZenerDiode':
+                        this.nodes = [
+                            { x: this.x - 40, y: this.y },
+                            { x: this.x + 40, y: this.y }
+                        ];
+                        break;
+
+                    case 'Wire':
+                    case 'VerticalWire':
+                        if (this.orientation === 'horizontal') {
+                            this.nodes = [
+                                { x: this.x - 40, y: this.y },
+                                { x: this.x + 40, y: this.y }
+                            ];
+                        } else {
+                            this.nodes = [
+                                { x: this.x, y: this.y - 40 },
+                                { x: this.x, y: this.y + 40 }
+                            ];
+                        }
+                        break;
+
+                    case 'Ammeter':
+                        this.nodes = [
+                            { x: this.x - 40, y: this.y },
+                            { x: this.x + 40, y: this.y }
+                        ];
+                        break;
+
+                    case 'Voltmeter':
+                        this.nodes = [
+                            { x: this.x - 40, y: this.y },
+                            { x: this.x + 40, y: this.y }
+                        ];
+                        break;
+                }
+            }
+
+            draw() {
+                drawingContext.shadowColor = 'rgba(0,0,0,0.1)';
+                drawingContext.shadowBlur = 8;
+                drawingContext.shadowOffsetY = 2;
+
+                stroke(0);
+                strokeWeight(2);
+                fill(this.color);
+
+                // Highlight selected component
+                if (this.isSelected) {
+                    stroke(255, 204, 0);
+                    strokeWeight(3);
+                    noFill();
+                    rect(this.x - 50, this.y - 30, 100, 60, 8);
+                }
+
+                // Apply rotation
+                push();
+                translate(this.x, this.y);
+                rotate(this.rotationAngle);
+                translate(-this.x, -this.y);
+
+                // Draw the component based on its type
+                switch (this.type) {
+                    case 'Battery':
+                        this.drawBattery();
+                        break;
+                    case 'Resistor':
+                        this.drawResistor();
+                        break;
+                    case 'VerticalResistor':
+                        this.drawVerticalResistor();
+                        break;
+                    case 'ZenerDiode':
+                        this.drawZenerDiode();
+                        break;
+                    case 'Wire':
+                    case 'VerticalWire':
+                        this.drawWire();
+                        break;
+                    case 'Ammeter':
+                        this.drawAmmeter();
+                        break;
+                    case 'Voltmeter':
+                        this.Voltmeter();
+                        break;
+                }
+
+                pop();
+
+                // Draw value label
+                fill(0);
+                noStroke();
+                textAlign(CENTER);
+                textSize(12);
+                let valueText = '';
+
+                if (this.type === 'Battery') {
+                    valueText = `${this.properties.voltage.toFixed(1)} V`;
+                    text(valueText, this.x, this.y + 40); // Default position for Battery
+                } else if (this.type === 'Resistor') {
+                    valueText = `${this.properties.resistance.toFixed(0)} Ω`;
+                    text(valueText, this.x, this.y + 40); // Default position for Resistor
+                } else if (this.type === 'VerticalResistor') {
+                    valueText = `${this.properties.resistance.toFixed(0)} Ω`;
+                    text(valueText, this.x - 40, this.y + 10); // Adjusted position for Vertical Resistor
+                } else if (this.type === 'ZenerDiode') {
+                    valueText = `${this.properties.Vz.toFixed(1)} V`;
+                    text(valueText, this.x - 30, this.y - 40); // Adjusted position for Zener Diode
+                }
+
+                drawingContext.shadowColor = 'transparent';
+            }
+
+            // battery 
+            drawBattery() {
+                const w = 40; // Width of the battery
+                const h = 100; // Height of the battery (taller for vertical orientation)
+                const leadLength = 20; // Length of the leads (wires)
+
+                // Draw battery body
+                fill(0); // Black for the main body
+                noStroke();
+                rect(this.x - w / 2, this.y - h / 2, w, h); // Main body with sharp corners
+
+                // Draw the top section of the battery
+                fill(200, 200, 200); // Light gray
+                rect(this.x - w / 2, this.y - h / 2, w, h / 3); // Top section
+
+                // Draw the bottom section of the battery
+                fill(150, 150, 150); // Darker gray
+                rect(this.x - w / 2, this.y + h / 6, w, h / 3); // Bottom section
+
+                // Draw the hazard symbol in the center
+                fill(255, 255, 0); // Yellow triangle
+                triangle(
+                    this.x, this.y - h / 12, // Top of the triangle
+                    this.x - w / 6, this.y + h / 12, // Bottom-left of the triangle
+                    this.x + w / 6, this.y + h / 12 // Bottom-right of the triangle
+                );
+
+                // Draw the lightning bolt inside the triangle
+                fill(0); // Black for lightning bolt
+                beginShape();
+                vertex(this.x, this.y - h / 24); // Top point
+                vertex(this.x - w / 15, this.y); // Left middle
+                vertex(this.x, this.y); // Middle point
+                vertex(this.x - w / 15, this.y + h / 24); // Bottom-left point
+                vertex(this.x + w / 15, this.y); // Bottom middle
+                vertex(this.x, this.y); // Middle point again to close shape
+                endShape(CLOSE);
+
+                // Draw the battery leads (wires)
+                stroke(0); // Black stroke for wires
+                strokeWeight(3);
+                line(this.x, this.y - h / 2 - leadLength, this.x, this.y - h / 2); // Top lead
+                line(this.x, this.y + h / 2, this.x, this.y + h / 2 + leadLength); // Bottom lead
+
+                // Add small circles at the ends of the terminals
+                fill(0); // Black circles for the terminals
+                ellipse(this.x, this.y - h / 2 - leadLength, 8, 8); // Top terminal
+                ellipse(this.x, this.y + h / 2 + leadLength, 8, 8); // Bottom terminal
+            }
+
+            drawAmmeter(current) {
+                const r = 40; // Radius of the ammeter
+                const leadLength = 20; // Length of the connecting wires
+
+                // Draw circular body with slight shadow
+                fill(255, 165, 0); // Orange shade for the body
+                stroke(0);
+                strokeWeight(2);
+                ellipse(this.x, this.y, r * 2, r * 2); // Ammeter body
+
+                // Ammeter Label
+                fill(0);
+                textSize(18);
+                textAlign(CENTER, CENTER);
+                text("A", this.x, this.y - 8); // A label in the center
+
+                // Draw the animated needle
+                let angle = map(current, 0, 100, -PI / 4, PI / 4); // Mapping current to needle rotation
+                let needleX = this.x + cos(angle) * (r - 10);
+                let needleY = this.y + sin(angle) * (r - 10);
+
+                stroke(255, 0, 0); // Red needle
+                strokeWeight(2);
+                line(this.x, this.y, needleX, needleY); // Moving needle
+
+                // Draw the meter leads (wires)
+                stroke(0);
+                strokeWeight(3);
+                line(this.x - r, this.y, this.x - r - leadLength, this.y); // Left wire
+                line(this.x + r, this.y, this.x + r + leadLength, this.y); // Right wire
+
+                // Terminal connection circles
+                fill(0);
+                ellipse(this.x - r - leadLength, this.y, 8, 8); // Left terminal
+                ellipse(this.x + r + leadLength, this.y, 8, 8); // Right terminal
+            }
+
+
+            // Draw a horizontal resistor with color bands
+            drawResistor() {
+                const w = 100; // Width of the resistor body
+                const h = 30; // Height of the resistor body
+                const leadLength = 30; // Length of the leads (wires)
+                const bandWidth = 8; // Width of each color band
+
+                // Draw the body of the resistor
+                fill(235, 200, 150); // Beige color for the resistor body
+                noStroke();
+                rect(this.x - w / 2, this.y - h / 2, w, h, 15); // Rounded rectangle for the resistor body
+
+                // Draw the color bands
+                const resistance = this.properties.resistance; // Get resistance value
+                const bandColors = this.getResistorColorBands(resistance); // Get color bands
+
+                for (let i = 0; i < bandColors.length; i++) {
+                    fill(bandColors[i]);
+                    noStroke();
+                    rect(this.x - w / 2 + 20 + i * 15, this.y - h / 2, bandWidth, h); // Draw bands horizontally
+                }
+
+                // Draw the leads (wires)
+                stroke(180); // Light gray color for the leads
+                strokeWeight(4);
+                line(this.x - w / 2 - leadLength, this.y, this.x - w / 2, this.y); // Left lead
+                line(this.x + w / 2, this.y, this.x + w / 2 + leadLength, this.y); // Right lead
+
+                // Draw the cylindrical ends
+                fill(200, 200, 200); // Light gray for the end caps
+                ellipse(this.x - w / 2, this.y, 10, h); // Left cap
+                ellipse(this.x + w / 2, this.y, 10, h); // Right cap
+            }
+
+            // Helper function to get resistor color bands based on resistance value
+            getResistorColorBands(resistance) {
+                // Standard resistor color code
+                const colorCodes = [
+                    [0, 0, 0],       // Black (0)
+                    [139, 69, 19],   // Brown (1)
+                    [255, 0, 0],     // Red (2)
+                    [255, 165, 0],   // Orange (3)
+                    [255, 223, 0],   // Yellow (4)
+                    [0, 255, 0],     // Green (5)
+                    [0, 0, 255],     // Blue (6)
+                    [128, 0, 128],   // Purple (7)
+                    [128, 128, 128], // Gray (8)
+                    [255, 255, 255]  // White (9)
+                ];
+
+                // Break down resistance into significant digits and multiplier
+                let significantDigits = Math.floor(resistance / 10);
+                let multiplier = Math.floor(Math.log10(resistance)) - 1;
+
+                if (resistance < 10) {
+                    significantDigits = resistance;
+                    multiplier = 0;
+                }
+
+                const digit1 = Math.floor(significantDigits / 10);
+                const digit2 = significantDigits % 10;
+
+                // Clamp values to the valid range
+                const bandColors = [
+                    colorCodes[digit1] || colorCodes[0], // First digit
+                    colorCodes[digit2] || colorCodes[0], // Second digit
+                    colorCodes[multiplier] || colorCodes[0], // Multiplier
+                    [205, 127, 50] // Gold for ±5% tolerance
+                ];
+
+                return bandColors;
+            }
+
+
+            // Draw a vertical resistor with color bands
+            drawVerticalResistor() {
+                const w = 28; // Width of the resistor body
+                const h = 100; // Height of the resistor body
+                const leadLength = 20; // Length of the leads (wires)
+                const bandWidth = 6; // Width of each color band
+
+                // Draw the body of the resistor
+                fill(235, 200, 150); // Beige color for the resistor body
+                noStroke();
+                rect(this.x - w / 2, this.y - h / 2, w, h, 15); // Rounded rectangle for the resistor body
+
+                // Draw the color bands
+                const resistance = this.properties.resistance; // Get resistance value
+                const bandColors = this.getResistorColorBands(resistance); // Get color bands
+
+                for (let i = 0; i < bandColors.length; i++) {
+                    fill(bandColors[i]);
+                    noStroke();
+                    rect(this.x - w / 2, this.y - h / 2 + 20 + i * 15, w, bandWidth); // Draw bands vertically
+                }
+
+                // Adjust the lead length to increase the height
+                let newLeadLength = leadLength + 10; // Increase by 10 (adjust as needed)
+
+                // Draw the leads (wires)
+                stroke(180); // Light gray color for the leads
+                strokeWeight(4);
+                line(this.x, this.y - h / 2 - newLeadLength, this.x, this.y - h / 2); // Top lead
+                line(this.x, this.y + h / 2, this.x, this.y + h / 2 + newLeadLength); // Bottom lead
+
+
+                // Draw the cylindrical ends
+                fill(200, 200, 200); // Light gray for the end caps
+                ellipse(this.x, this.y - h / 2, w, 10); // Top cap
+                ellipse(this.x, this.y + h / 2, w, 10); // Bottom cap
+            }
+
+            // Helper function to get resistor color bands based on resistance value
+            getResistorColorBands(resistance) {
+                // Standard resistor color code
+                const colorCodes = [
+                    [0, 0, 0],       // Black (0)
+                    [139, 69, 19],   // Brown (1)
+                    [255, 0, 0],     // Red (2)
+                    [255, 165, 0],   // Orange (3)
+                    [255, 223, 0],   // Yellow (4)
+                    [0, 255, 0],     // Green (5)
+                    [0, 0, 255],     // Blue (6)
+                    [128, 0, 128],   // Purple (7)
+                    [128, 128, 128], // Gray (8)
+                    [255, 255, 255]  // White (9)
+                ];
+
+                // Break down resistance into significant digits and multiplier
+                let significantDigits = Math.floor(resistance / 10);
+                let multiplier = Math.floor(Math.log10(resistance)) - 1;
+
+                if (resistance < 10) {
+                    significantDigits = resistance;
+                    multiplier = 0;
+                }
+
+                const digit1 = Math.floor(significantDigits / 10);
+                const digit2 = significantDigits % 10;
+
+                // Clamp values to the valid range
+                const bandColors = [
+                    colorCodes[digit1] || colorCodes[0], // First digit
+                    colorCodes[digit2] || colorCodes[0], // Second digit
+                    colorCodes[multiplier] || colorCodes[0], // Multiplier
+                    [205, 127, 50] // Gold for ±5% tolerance
+                ];
+
+                return bandColors;
+            }
+
+
+            // zener diode
+            drawZenerDiode() {
+                const sz = 60; // Size of the diode
+                const leadLength = 60; // Length of the leads (wires)
+                strokeWeight(3);
+
+                // Draw the cathode line (with a Zener breakdown bar)
+                stroke(0); // Black stroke for clarity
+                line(this.x - sz / 2, this.y - sz / 2, this.x + sz / 2, this.y - sz / 2); // Horizontal line at the top
+                line(this.x + sz / 2, this.y - sz / 2, this.x + sz / 2, this.y - sz / 2 - 5); // Breakdown bar pointing down
+
+                // Draw the Zener diode symbol (triangle)
+                beginShape();
+                vertex(this.x - sz / 2, this.y); // Left point (bottom)
+                vertex(this.x, this.y - sz / 2); // Middle point (top)
+                vertex(this.x + sz / 2, this.y); // Right point (bottom)
+                endShape(CLOSE); // Close the shape
+
+                // Draw the terminals (wires)
+                // Top terminal (wire)
+                line(this.x, this.y - sz / 2, this.x, this.y - sz / 2 - leadLength); // Top terminal (wire)
+
+                // Bottom terminal (wire) - connected to the bottom of the triangle
+                line(this.x, this.y, this.x, this.y + leadLength); // Bottom terminal (wire)
+
+                // Add small circles at the ends of the terminals for added realism
+                ellipse(this.x, this.y - sz / 2 - leadLength, 5, 5); // Top terminal circle
+                ellipse(this.x, this.y + leadLength, 5, 5); // Bottom terminal circle
+            }
+
+            // drawing a wire
+            drawWire() {
+                const wireLength = 100; // Length of the wire
+                const wireThickness = 3; // Thickness of the wire
+                const wireColor = color(0); // Wire color (black)
+
+                // Set wire properties (color, thickness)
+                stroke(wireColor);
+                strokeWeight(wireThickness);
+
+                // Draw the wire based on orientation
+                if (this.orientation === 'horizontal') {
+                    line(this.x - wireLength / 2, this.y, this.x + wireLength / 2, this.y); // Horizontal wire
+                } else {
+                    line(this.x, this.y - wireLength / 2, this.x, this.y + wireLength / 2); // Vertical wire
+                }
+            }
+
+            isMouseOver(mx, my) {
+                return dist(mx, my, this.x, this.y) < 40;
+            }
+        }
+
+        function setup() {
+            createCanvas(windowWidth - 300, windowHeight - 50);
+            textSize(14);
+            angleMode(DEGREES);
+            document.getElementById('controlPanel').style.display = 'none';
+        }
+
+        function draw() {
+            background(245);
+            drawGrid();
+
+            // Draw components
+            components.forEach(comp => {
+                comp.draw();
+                if (comp === selectedComponent) {
+                    stroke(255, 204, 0);
+                    strokeWeight(3);
+                    noFill();
+                    rect(comp.x - 50, comp.y - 30, 100, 60, 8);
+                }
+            });
+
+            // Draw wires
+            stroke(0);
+            strokeWeight(3);
+            wires.forEach(wire => {
+                line(wire.start.x, wire.start.y, wire.end.x, wire.end.y);
+            });
+
+            // Draw node highlights
+            if (hoveredNode) {
+                fill(255, 204, 0);
+                noStroke();
+                circle(hoveredNode.x, hoveredNode.y, 10);
+            }
+
+            updateCircuit();
+        }
+
+        // Calculation Logic 
+        function updateCircuit() {
+            // Get component values from the control panel
+            const battery = components.find(comp => comp.type === 'Battery');
+            const seriesResistor = components.find(comp => comp.type === 'Resistor');
+            const loadResistor = components.find(comp => comp.type === 'VerticalResistor');
+            const zenerDiode = components.find(comp => comp.type === 'ZenerDiode');
+
+            if (!battery || !seriesResistor || !loadResistor || !zenerDiode) {
+                return;
+            }
+
+            const vin = battery.properties.voltage; // Input voltage
+            const r = seriesResistor.properties.resistance; // Series resistor
+            const rl = loadResistor.properties.resistance; // Load resistor
+            const vz = zenerDiode.properties.Vz; // Zener voltage
+
+            let totalCurrent, loadCurrent, zenerCurrent, loadVoltage, zenerVoltage;
+
+            // Before Breakdown (vin < vz): Leakage current ensures a smooth transition
+            if (vin < vz) {
+                zenerVoltage = vin; // Before breakdown, Zener voltage is equal to input voltage
+                loadVoltage = vin * (rl / (r + rl)); // Load voltage via voltage divider
+                totalCurrent = loadVoltage / rl; // Total current = load current
+                loadCurrent = totalCurrent;
+
+                // Apply an exponential leakage current model for smooth transition
+                const leakageCurrent = Math.max(0.00025, 0.00025 * Math.exp((vin - vz) * 8)); // Prevents negative leakage
+                zenerCurrent = leakageCurrent;
+            }
+
+            // **Modified Condition for vin ≈ vz (ensuring a smooth transition)**
+            if (Math.abs(vin - vz) < 0.05) { // Small buffer to smooth transition at Vz
+                zenerVoltage = vz;
+                totalCurrent = (vin - vz) / r;
+                loadCurrent = vz / rl;
+                loadVoltage = vz;
+
+                // Ensure total current is always greater than load current
+                const transitionFactor = Math.exp((vin - vz) * 50);
+                zenerCurrent = Math.max(0.00025, transitionFactor * (totalCurrent - loadCurrent));
+            }
+
+            // After Breakdown (vin > vz): Sharp increase in current
+            if (vin > vz) {
+                zenerVoltage = vz; // Zener diode clamps voltage at Vz
+                totalCurrent = (vin - vz) / r; // Current through series resistor
+                loadCurrent = vz / rl; // Load current
+                zenerCurrent = totalCurrent - loadCurrent; // Sharp increase in Zener current
+                loadVoltage = vz; // Load voltage is same as Zener voltage
+            }
+
+            // Update the ammeter with the Zener current
+            const ammeter = components.find(comp => comp.type === 'Ammeter');
+            if (ammeter) {
+                ammeter.current = zenerCurrent;
+            }
+
+            // Log the results for debugging
+            console.log("Zener Current:", zenerCurrent);
+            console.log("Load Current:", loadCurrent);
+            console.log("Total Current:", totalCurrent);
+            console.log("Load Voltage:", loadVoltage);
+            console.log("Zener Voltage:", zenerVoltage);
+        }
+
+        function drawGrid() {
+            stroke(220);
+            strokeWeight(1);
+            for (let x = 0; x < width; x += GRID_SIZE) {
+                line(x, 0, x, height);
+            }
+            for (let y = 0; y < height; y += GRID_SIZE) {
+                line(0, y, width, y);
+            }
+        }
+
+        function mousePressed() {
+            // Component selection
+            for (let comp of components) {
+                if (comp.isMouseOver(mouseX, mouseY)) {
+                    selectedComponent = comp;
+                    showComponentControls(comp);
+                    return;
+                }
+            }
+
+            // Node connection
+            let closestNode = null;
+            let minDist = Infinity;
+            components.forEach(comp => {
+                comp.nodes.forEach(node => {
+                    const d = dist(mouseX, mouseY, node.x, node.y);
+                    if (d < 15 && d < minDist) {
+                        minDist = d;
+                        closestNode = node;
+                    }
+                });
+            });
+
+            if (closestNode) {
+                draggingNode = closestNode;
+            }
+        }
+
+        function mouseDragged() {
+            if (selectedComponent) {
+                selectedComponent.x = Math.round(mouseX / GRID_SIZE) * GRID_SIZE;
+                selectedComponent.y = Math.round(mouseY / GRID_SIZE) * GRID_SIZE;
+                selectedComponent.updateNodes();
+            }
+
+            if (draggingNode) {
+                draggingNode.x = mouseX;
+                draggingNode.y = mouseY;
+
+            }
+        }
+
+        function mouseReleased() {
+            if (draggingNode) {
+                let closestNode = null;
+                let minDist = Infinity;
+
+                components.forEach(comp => {
+                    comp.nodes.forEach(node => {
+                        if (node !== draggingNode) {
+                            const d = dist(draggingNode.x, draggingNode.y, node.x, node.y);
+                            if (d < 25 && d < minDist) {
+                                minDist = d;
+                                closestNode = node;
+                            }
+                        }
+                    });
+                });
+
+                if (closestNode) {
+                    wires.push({ start: draggingNode, end: closestNode });
+                }
+                draggingNode = null;
+            }
+            selectedComponent = null;
+        }
+
+        function showComponentControls(comp) {
+            const controlsDiv = document.getElementById('componentControls');
+            controlsDiv.innerHTML = '';
+            document.getElementById('controlPanel').style.display = 'block';
+
+            const createControl = (label, min, max, value, step = 1) => {
+                const container = document.createElement('div');
+                container.className = 'slider-container';
+
+                const labelElem = document.createElement('label');
+                labelElem.textContent = `${label}: `;
+                const valueElem = document.createElement('span');
+                valueElem.textContent = value;
+
+                const slider = document.createElement('input');
+                slider.type = 'range';
+                slider.min = min;
+                slider.max = max;
+                slider.value = value;
+                slider.step = step;
+                slider.className = 'slider';
+
+                slider.oninput = () => {
+                    const newValue = parseFloat(slider.value);
+                    comp.properties[comp.type === 'Battery' ? 'voltage' :
+                        comp.type === 'Resistor' || comp.type === 'VerticalResistor' ? 'resistance' : 'Vz'] = newValue;
+                    valueElem.textContent = newValue.toFixed(1);
+                    updateCircuit(); // Update the circuit whenever a value changes
+                };
+
+                container.append(labelElem, slider, valueElem);
+                return container;
+            };
+
+            if (comp.type === 'Battery') {
+                controlsDiv.appendChild(createControl('Voltage (V)', 0, 60, comp.properties.voltage, 0.1));
+            } else if (comp.type === 'Resistor' || comp.type === 'VerticalResistor') {
+                controlsDiv.appendChild(createControl('Resistance (Ω)', 10, 5000, comp.properties.resistance));
+            } else if (comp.type === 'ZenerDiode') {
+                controlsDiv.appendChild(createControl('Zener Voltage (V)', 2, 15, comp.properties.Vz));
+            }
+        }
+
+
+        function addComponent(type) {
+            let newComp;
+            if (type === "VerticalWire") {
+                newComp = new Component("Wire", width / 2, height / 2, "vertical"); // Pass orientation
+            } else {
+                newComp = new Component(type, width / 2, height / 2);
+            }
+            components.push(newComp);
+        }
+
+
+        // Rotate //
+        let rotationAngles = {}; // Store rotation for each component
+
+        // Function to select a component when clicked
+        document.addEventListener("click", function (event) {
+            if (event.target.classList.contains("component")) {
+                document.querySelectorAll(".component").forEach(el => el.classList.remove("selected")); // Remove previous selection
+                event.target.classList.add("selected"); // Select new component
+            }
+        });
+
+        // Function to rotate the selected component
+        function rotateComponent() {
+            const selectedComponent = document.querySelector(".selected"); // Get selected component
+            if (!selectedComponent) {
+                alert("Select a component to rotate!"); // Show alert if no component is selected
+                return;
+            }
+
+            const id = selectedComponent.dataset.id; // Unique identifier for rotation tracking
+            if (!rotationAngles[id]) rotationAngles[id] = 1; // Initialize if not set
+
+            rotationAngles[id] = (rotationAngles[id] + 90) % 360; // Increase rotation by 90 degrees
+            selectedComponent.style.transform = `rotate(${rotationAngles[id]}deg)`;
+        }
+
+        // Select //
+        let selectedComponent = null; // Track the selected component
+
+        // Function to select a component
+        function selectComponent(component) {
+            // Deselect previously selected component
+            if (selectedComponent) {
+                selectedComponent.classList.remove("selected");
+            }
+
+            // Set new selected component
+            selectedComponent = component;
+            selectedComponent.classList.add("selected");
+
+            // Stop click event from propagating to the canvas
+            event.stopPropagation();
+        }
+
+        // Function to deselect when clicking on empty canvas
+        function deselectComponent(event) {
+            if (event.target.id === "canvas") { // Ensure click is on canvas
+                if (selectedComponent) {
+                    selectedComponent.classList.remove("selected");
+                    selectedComponent = null;
+                }
+            }
+        }
+
+        // Attach event listeners to all components (Dynamically)
+        document.addEventListener("click", function (event) {
+            if (event.target.classList.contains("component")) {
+                selectComponent(event.target);
+            }
+        });
+
+        // Attach event listener to canvas for deselection
+        document.getElementById("canvas").addEventListener("click", deselectComponent);
+
+
+    </script>
+</body>
+
+</html>

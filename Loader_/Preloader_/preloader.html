@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="images/favicon.png">
+  <!-- <title>Home </title> -->
+  <link rel="stylesheet" href="preloader.css">
+</head>
+<body>
+<div id="preloader">
+<div class="loader">
+  <svg viewBox="0 0 80 80">
+    <circle r="32" cy="40" cx="40" id="test"></circle>
+  </svg>
+</div>
+
+<div class="loader triangle">
+  <svg viewBox="0 0 86 80">
+    <polygon points="43 8 79 72 7 72"></polygon>
+  </svg>
+</div>
+
+<div class="loader">
+  <svg viewBox="0 0 80 80">
+    <rect height="64" width="64" y="8" x="8"></rect>
+  </svg>
+</div>
+</div>
+
+  <!-- <script src="script.js"></script> -->
+  <script>
+//     document.addEventListener("DOMContentLoaded", function () {
+//     setTimeout(() => {
+//         document.getElementById("loader").style.display = "none"; 
+//         document.getElementById("content").style.display = "block"; 
+//         document.body.classList.remove("no-scroll"); 
+//     }, 5000); 
+// });
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Disable scrolling initially
+    document.documentElement.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
+
+    setTimeout(() => {
+        document.getElementById("loader").style.display = "none"; 
+        document.getElementById("content").style.display = "block"; 
+
+        // Enable scrolling after loader disappears
+        document.documentElement.style.overflow = "auto";
+        document.body.style.overflow = "auto";
+    }, 2000); 
+});
+
+  </script>
+
+</body>
+</html>

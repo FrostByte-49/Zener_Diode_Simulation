@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="android-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link href="https://fonts.googleapis.com/css2?family=Days+One&display=swap" rel="stylesheet">
+  <link rel="icon" href="zner_img/Picture_16.webp" loading="lazy">
+  <title>Zener Diode Simulation</title>
+  <link rel="stylesheet" href="simulation.css">
+  <link rel="preload" as="image" href="zner_img/Picture_20.webp">
+
+  <!-- Google Tag -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-BLQTLTQV5S"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-BLQTLTQV5S');
+  </script>
+
+</head>
+
+<body>
+  <header>
+    <!-- <h1 class="typed-out">Zener Diode! </h1> -->
+    <a href="index.html"><img src="Team_/Logo_.webp" alt="Logo" id="logo"></a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="theory.html">Theory</a>
+      <a href="procedure.html">Procedure</a>
+      <a href="simulation.html" class="active">Simulation</a>
+      <a href="about.html">About</a>
+    </nav>
+
+    <button id="menu-toggle">☰</button>
+    <div id="mobile-menu">
+      <a href="index.html">Home</a>
+      <a href="theory.html">Theory</a>
+      <a href="procedure.html">Procedure</a>
+      <a href="simulation.html">Simulation</a>
+      <a href="about.html">About</a>
+      <a href="Loader_/Login_/register.html">Login</a>
+      <a href="Loader_/Dashboard_/dashboard.html">Dashboard</a>
+    </div>
+
+    <!-- <a href="Loader_/Login_/register.html">
+      <button class="sign-in-btn">
+        <svg width="37" height="37" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="white"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  
+          <circle cx="10" cy="8" r="4" stroke="white" stroke-width="2" />
+          <path d="M4 20c0-4 3-7 6-7s6 3 6 7" stroke="white" stroke-width="2" />
+        </svg>
+      </button>
+    </a> -->
+
+  </header>
+
+  <section class="simulation-intro">
+    <div class="container11">
+      <h1>Zener Diode Simulation</h1>
+      <p>An interactive Zener Diode Simulation that helps visualize voltage regulation, circuit behavior, and real-time
+        calculations for better understanding.</p>
+    </div>
+  </section>
+
+  <!-- Canvas Section
+    <div id="canvas-section">
+      <h1 style="text-align: center;">Simulator</h1>
+      <canvas id="canvas_drag"></canvas>
+    </div>
+  </div> -->
+
+  <!-- <hr>
+
+  <div style="display: flex; justify-content: right; margin-right: 5%; border-radius: 10px;">
+    <iframe src="sketch_.html" width="1160" height="630" frameborder="0"></iframe>
+  </div>
+ 
+ <hr> -->
+
+
+  <div style="margin-left: 3%; margin-top: 2%;">
+    <object data="sketch_.html" width="95%" height="650px" style="overflow: hidden;"></object>
+  </div>
+
+  <div id="canvas-section">
+    <h1 style="text-align: center;">Preview Pane</h1>
+    <canvas id="canvas"></canvas>
+  </div>
+  </div>
+
+  <!-- Input and Results Section -->
+  <div class="input-results-container">
+    <div id="input-section">
+      <h1>Input Values</h1>
+
+      <p><label for="input-voltage">Input Voltage (V):</label></p>
+      <input type="number" id="input-voltage" placeholder="Enter Voltage">
+      <label for="resistor-value">Resistor (Ω):</label>
+      <input type="number" id="resistor-value" placeholder="Enter Resistance">
+      <label for="load-resistor-value">Load Resistor (Ω):</label>
+      <input type="number" id="load-resistor-value" placeholder="Enter Load Resistance">
+      <label for="zener-diode">Zener Diode (V):</label>
+      <input type="number" id="zener-diode" placeholder="Enter Zener Diode Voltage">
+      <button id="calculate-btn">Calculate</button>
+
+    </div>
+
+    <div id="results-section">
+      <h1>Results</h1>
+      <p>Total Current ( I<sub>T</sub> ) : <span id="total-current"></span></p>
+      <p>Load Current ( I<sub>L</sub> ) : <span id="load-current"></span></p>
+      <p>Zener Current ( I<sub>Z</sub> ) : <span id="zener-current"></span></p>
+      <p>Zener Voltage ( V<sub>Z</sub> ) : <span id="zener-voltage"></span></p>
+      <p>Load Voltage ( V<sub>L</sub> ) : <span id="load-voltage"></span></p>
+      <button id="add-to-table-btn">Add to Table</button>
+      <button id="clear-results-btn">Clear</button>
+
+    </div>
+  </div>
+
+  <!-- Table Section -->
+  <section id="table-section">
+    <h1>Observation Table</h1>
+    <table id="results-table">
+      <thead>
+        <tr>
+          <th>Sr No</th>
+          <th>Input Voltage ( V<sub>in</sub> ) <br>( V )</br></th>
+          <th>Total Current ( I<sub>T</sub> ) <br>( A )</br></th>
+          <th>Load Current ( I<sub>L</sub> ) <br>( A )</br></th>
+          <th>Zener Voltage ( V<sub>Z</sub> ) <br>( V )</br></th>
+          <th>Zener Current ( I<sub>Z</sub> ) <br>( A )</br></th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Dynamic rows will be added here -->
+      </tbody>
+    </table>
+    <button id="plot-graph-btn">Plot Graph</button>
+    <button id="clear-table-btn">Clear</button>
+    <button id="delete-row-btn">Delete</button>
+  </section>
+
+  <!-- Graph Section -->
+  <section id="graph-section">
+    <h1>Graph</h1>
+    <canvas id="zener-graph"></canvas>
+    <button id="clear-graph-btn">Clear Graph</button>
+    <button id="save-graph-btn">Save Graph</button>
+  </section>
+
+
+  <!---Footer--->
+  <div>
+    <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+      viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+      <defs>
+        <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+      </defs>
+      <g class="parallax">
+        <use xlink:href="#gentle-wave" x="48" y="0" fill="#121212" />
+        <use xlink:href="#gentle-wave" x="48" y="3" fill="#1e1e1e" />
+        <use xlink:href="#gentle-wave" x="48" y="5" fill="#2a2a2a" />
+        <use xlink:href="#gentle-wave" x="48" y="7" fill="#000000" />
+      </g>
+    </svg>
+  </div>
+
+  <footer class="footer-content">
+    <h4>&copy; 2025 Zener Diode Simulation | All Rights Reserved</h4>
+    <h4>Developed by Quantum Squad</h4>
+    <h4> <a href="https://pvppcoe.ac.in/" target="_blank"> VPPCOE & VA </a> </h4>
+  </footer>
+  </div>
+
+  </div>
+
+  <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+  <df-messenger intent="WELCOME" chat-title="ZenerBot" agent-id="833e6aa5-19a2-4679-a363-5fae299d2133"
+    language-code="en"></df-messenger>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
+  <script src="simulation.js"></script>
+</body>
+
+</html>
