@@ -11,8 +11,8 @@ Features 🎉
 - Enhanced AI-driven Zener Bot.
 
 Tech Stack 🤖
-- Frontend: Html, CSS 
-- Backend: JavaScript, Firebase
+- Frontend: Html, CSS, JS
+- Backend:  Firebase
 - Graphing: Chart.js
 
 How to Use 📚
