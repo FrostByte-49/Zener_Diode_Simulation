@@ -31,10 +31,10 @@ Fork the repo, submit issues, and suggest improvements!
 Free to use and modify.
 
 Contact 📲
-Reach us at c.krishna.santosh@gmail.com / shadowfrost78839@gmail.com
+Reach us at c.krishna.santosh@gmail.com / pranav.kh25@gmail.com
 
-website link -- https://zenerSim.netlify.app
-app link -- https://rb.gy/0aigtz
-Ig page---https://www.instagram.com/team.quantum.squad
+Website Link -- https://zenersim.netlify.app
+App Link -- https://rb.gy/0aigtz
+IG Page -- https://www.instagram.com/team.quantum.squad
 
 "Simulate, Experiment & Master Zener Diodes!" 🚀
