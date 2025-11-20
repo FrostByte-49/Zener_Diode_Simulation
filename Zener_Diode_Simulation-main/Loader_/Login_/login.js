@@ -4,14 +4,7 @@ import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/fir
 
 
 // Firebase configuration
-const firebaseConfig = {
-    apiKey: "AIzaSyDYPE1JvPCUa6LDLekmXosmFQ-SegUAe0Y",
-    authDomain: "zener-login.firebaseapp.com",
-    projectId: "zener-login",
-    storageBucket: "zener-login.appspot.com",
-    messagingSenderId: "1066231166290",
-    appId: "1:1066231166290:web:546eb712962a18818c368b"
-};
+
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
