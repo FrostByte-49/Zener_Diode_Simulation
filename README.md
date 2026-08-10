@@ -18,20 +18,20 @@ Technically, the project is structured as a modular, lightweight single-page and
 <br>
 
 ## 📑 Table of Contents
-- [Features](#features)
-- [Preview](#preview)
-- [Technologies Used](#technologies-used)
-- [System Architecture](#system-architecture)
-- [Project Structure](#project-structure)
-- [Getting Started](#getting-started)
-- [Usage](#usage)
-- [API Reference](#api-reference)
-- [Customization](#customization)
-- [Future Enhancements](#future-enhancements)
-- [How To Contribute](#how-to-contribute)
-- [License](#license)
-- [Author](#author)
-- [Support The Project](#support-the-project)
+- [Features](#-features)
+- [Preview](#-preview)
+- [Technologies Used](#-technologies-used)
+- [System Architecture](#-system-architecture)
+- [Project Structure](#-project-structure)
+- [Getting Started](#-getting-started)
+- [Usage](#-usage)
+- [API Reference](#-api-reference)
+- [Customization](#-customization)
+- [Future Enhancements](#-future-enhancements)
+- [How To Contribute](#-how-to-contribute)
+- [License](#-license)
+- [Author](#-author)
+- [Support The Project](#-support-the-project)
 
 <br>
 
